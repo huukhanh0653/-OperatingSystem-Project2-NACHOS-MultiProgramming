@@ -1,165 +1,264 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>How to install NachOS on Ubuntu 18.04</title>
-</head>
-<body>
+<body style="background-color:#161925; color:#FFFFFF">
+    <html>
+        <head>
+            <style>
+        body {
+           background-color: rgb(20,30, 1);
+        }
+        h1{
+           color: cyan;
+        }
+    </style>
+            <h1>How to install NachOS on Ubuntu 18.04</h1>
+        </head>
+        <body>
 
-    <h2>How to install Nachos on Ubuntu 18.04</h2>
-    The install procedure is as follows:
-    <ol>
-        <li>Login to Ubuntu 18.04 with your account</li>
-        <br>
-
-        <li>Install and compile the basic toolkit<br>
-        ~><font color="#0000FF"> sudo apt-get install build-essential</font></li>
-        <br>
-
-        <li>Computer 32/64 check</li>
-        <ul>
-            <li type="disc">Check that the system is a 64-bit kernel,<br>
-                ~> <font color="#0000FF">dpkg --print-architecture</font><br>
-                Execute the above command. If the output shows amd64, it means that your Linux distribution is a 64-bit kernel, and you need to perform the second step;
-            </li>
-            <li type="disc">Turn on support for 32 positions<br>
-                ~><font color="#0000FF">sudo dpkg --add-architecture i386</font></li>
-            <li type="disc">Install c, c++ multi-platform library<br>
-                ~> <font color="#0000FF">sudo apt-get install gcc-multilib g++-multilib</font></li>
-            <li type="disc">Install 32-bit environment library<br>
-                ~> <font color="#0000FF">sudo apt-get install lib32ncurses5 lib32z1</font></li>
-            <li type="disc">Install a version lower than gcc5.0<br>
-                ~> <font color="#0000FF">sudo apt-get install gcc-4.8 gcc-4.8-multilib g++-4.8 g++-4.8-multilib</font></li>
-            <li type="disc">Switch the low version gcc and g++ to the current active version<br>
-                ~> <font color="#0000FF">sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40</font><br>
-                ~> <font color="#0000FF">sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 40</font>
-            </li>
-            <li type="disc">Check if the version is correct<br>
-                ~> <font color="#0000FF">gcc -v</font><br>
-                You should see the following message:
-                <table cellspacing="0" border="1"><tbody><tr><td>
-                    Using built-in specs.<br>
-                    COLLECT_GCC=gcc<br>
-                    COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/4.8/lto-wrapper<br>
-                    Target: x86_64-linux-gnu<br>
-                    Configured with: ../src/configure -v --with-pkgversion='Ubuntu 4.8.5-4ubuntu8' --with-bugurl=file:///usr/share/doc/gcc-4.8/README.Bugs --enable-languages=c,c++,go,d,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-4.8 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.8 --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object --disable-libmudflap --enable-plugin --with-system-zlib --enable-objc-gc --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu<br>
-                    Thread model: posix<br>
-                    gcc version 4.8.5 (Ubuntu 4.8.5-4ubuntu8)<br>
-                </td></tr></tbody></table>
-                ~> <font color="#0000FF">g++ -v</font><br>
-                You should see the following message:
-                <table cellspacing="0" border="1"><tbody><tr><td>
-                    Using built-in specs.<br>
-                    COLLECT_GCC=g++<br>
-                    COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/4.8/lto-wrapper<br>
-                    Target: x86_64-linux-gnu<br>
-                    Configured with: ../src/configure -v --with-pkgversion='Ubuntu 4.8.5-4ubuntu8' --with-bugurl=file:///usr/share/doc/gcc-4.8/README.Bugs --enable-languages=c,c++,go,d,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-4.8 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.8 --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --enable-gnu-unique-object --disable-libmudflap --enable-plugin --with-system-zlib --enable-objc-gc --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu<br>
-                    Thread model: posix<br>
-                    gcc version 4.8.5 (Ubuntu 4.8.5-4ubuntu8)<br>
-                </td></tr></tbody></table>
-            </li>
-        </ul>
-        <br>
-        
-        <li>Create a directory called "nachos" for creating the environment of NachOS and then change directory into "nachos" directory</li>
-        <ul>
-            
-        <li type="disc">~><em> </em><font color="#0000FF">mkdir nachos</font></li>
-            <br>
-        
-        <li type="disc">~> <font color="#0000FF">cd nachos</font></li>
-        </ul>
-        <br>	
-        
-        <li>Download the source code</li>
-        <ul>
-            <li type="disc">Download NachOS source code:<br>
-          ~/nachos> <font color="#0000FF">wget https://www.fit.hcmus.edu.vn/~ntquan/os/assignment/nachos_40.tar.gz</font></li>
-            <li type="disc">Download the source code of MIPS cross-compiler:<br>
-          ~/nachos><font color="#0000FF"> wget https://www.fit.hcmus.edu.vn/~ntquan/os/assignment/mips-decstation.linux-xgcc.gz</font></li>
-            <li type="disc">Download the patch for Linux:<br>
-          ~/nachos> <font color="#0000FF">wget https://www.fit.hcmus.edu.vn/~ntquan/os/assignment/nachos-gcc.diff.gz</font></li>		
-        </ul>
-        <br>
-        
-        
-        <li>Extract the zipped files and patch the Makefiles for the environment of Linux</li>
-        <ul>
-            <li type="disc">Extract NachOS source code:<br>
-            ~/nachos> <font color="#0000FF">tar zxvf nachos_40.tar.gz</font></li>
-            <li type="disc">Extract the source code of MIPS cross-compiler:<br>
-            ~/nachos> <font color="#0000FF">tar zxvf mips-decstation.linux-xgcc.gz</font></li>
-             <li type="disc">Extract patch file:<br>
-            ~/nachos> <font color="#0000FF">tar zxvf nachos-gcc.diff.gz</font></li>
-            <li type="disc">Patch Makefiles:<br>
-          ~/nachos> <font color="#0000FF">patch -p0 < nachos-gcc.diff</font></li>
-        </ul>
-        <br>
-        
-        <li>Compile NachOS:</li>
-        <ul>
-            <li type="disc">	~/nachos> <font color="#0000FF">cd NachOS-4.0</font></li>
-            
-        <li type="disc"> ~/nachos/NachOS-4.0> <font color="#0000FF">cd code/build.linux</font></li>
-            <li type="disc">	~/nachos/NachOS-4.0/code/build.linux> <font color="#0000FF">make depend</font></li>
-            <li type="disc">	~/nachos/NachOS-4.0/code/build.linux> <font color="#0000FF">make</font></li>
-        </ul>
-        <br>
-        
-        
-        <li>Test Nachos:</li>
-        <ul>
-            <li type="disc">	~/nachos/NachOS-4.0/code/build.linux> <font color="#0000FF">./nachos</font><br>
-            You should see the following message:
-            <table cellspacing="0" border="1"><tbody><tr><td>
-                Machine halting!<br>
+            <h2>How to install Nachos on Ubuntu 18.04</h2>
+            The install procedure is as follows:
+            <ol>
+                <li>Login to Ubuntu 18.04 with your account</li>
                 <br>
-                Ticks: total 10, idle 0, system 10, user 0<br>
-                Disk I/O: reads 0, writes 0<br>
-                Console I/O: reads 0, writes 0<br>
-                Paging: faults 0<br>
-                Network I/O: packets received 0, sent 0<br>
-            </td></tr></tbody></table>
-            </li>
-    
-        </ul>
-        <br>
-        
-      <li>Build the tool to transfer COFF format to NOFF format (The output executible 
-        file is<font color="#009900"> coff2noff.x86Linux</font>):</li>
-        <ul>
-            <li type="disc">	~/nachos/NachOS-4.0/code/build.linux> <font color="#0000FF">cd ../../coff2noff</font><br>
-            <li type="disc"> ~/nachos/NachOS-4.0/coff2noff> <font color="#0000FF">make</font><br>
-        </ul>
-        <br>	
-     <li>Compile the "test" user applications for NachOS:</li>
-        <ul>
-            <li type="disc">	~/nachos/NachOS-4.0/coff2noff> <font color="#0000FF">cd ../code/test</font><br>
-            <li type="disc"> ~/nachos/NachOS-4.0/code/test> <font color="#0000FF">make</font><br>
-            
-        <li type="disc">Use the application program "<em><font color="#FF0000">halt</font></em>" 
-          to test running appliction on NachOS:<br>
-          ~/nachos/NachOS-4.0/code/test> <font color="#0000FF">../build.linux/nachos -x halt</font><br>
-            You should see the following message:
-            <table cellspacing="0" border="1"><tbody><tr><td>
-            Machine halting! <br>
-            <br>
-            Ticks: total 22, idle 0, system 10, user 12<br>
-            Disk I/O: reads 0, writes 0<br>
-            Console I/O: reads 0, writes 0<br>
-            Paging: faults 0<br>
-            Network I/O: packets received 0, sent 0<br>
-    
-            </td></tr></tbody></table>		
-            
-            </li>
-            
-        </ul>	
-        <br>
-        
-        
-        <li>Congratulations!!! You've succeeded.</li>
-    
-    </ol>
-    
-</body>
-</html>
+
+                <li>Install and compile the basic toolkit<br>
+                    ~><font color="#50FA7B"> sudo apt-get install
+                        build-essential</font></li>
+                <br>
+
+                <li>Computer 32/64 check</li>
+                <ul>
+                    <li type="disc">Check that the system is a 64-bit kernel,<br>
+                        ~> <font color="#50FA7B">dpkg --print-architecture</font><br>
+                        Execute the above command. If the output shows amd64, it
+                        means that your Linux distribution is a 64-bit kernel,
+                        and you need to perform the second step;
+                    </li>
+                    <li type="disc">Turn on support for 32 positions<br>
+                        ~><font color="#50FA7B">sudo dpkg --add-architecture
+                            i386</font></li>
+                    <li type="disc">Install c, c++ multi-platform library<br>
+                        ~> <font color="#50FA7B">sudo apt-get install
+                            gcc-multilib g++-multilib</font></li>
+                    <li type="disc">Install 32-bit environment library<br>
+                        ~> <font color="#50FA7B">sudo apt-get install
+                            lib32ncurses5 lib32z1</font></li>
+                    <li type="disc">Install a version lower than gcc5.0<br>
+                        ~> <font color="#50FA7B">sudo apt-get install gcc-4.8
+                            gcc-4.8-multilib g++-4.8 g++-4.8-multilib</font></li>
+                    <li type="disc">Switch the low version gcc and g++ to the
+                        current active version<br>
+                        ~> <font color="#50FA7B">sudo update-alternatives
+                            --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40</font><br>
+                        ~> <font color="#50FA7B">sudo update-alternatives
+                            --install /usr/bin/g++ g++ /usr/bin/g++-4.8 40</font>
+                    </li>
+                    <li type="disc">Check if the version is correct<br>
+                        ~> <font color="#50FA7B">gcc -v</font><br>
+                        You should see the following message:
+                        <table cellspacing="0" border="1"><tbody><tr><td>
+                                        Using built-in specs.<br>
+                                        COLLECT_GCC=gcc<br>
+                                        COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/4.8/lto-wrapper<br>
+                                        Target: x86_64-linux-gnu<br>
+                                        Configured with: ../src/configure -v
+                                        --with-pkgversion='Ubuntu
+                                        4.8.5-4ubuntu8'
+                                        --with-bugurl=file:///usr/share/doc/gcc-4.8/README.Bugs
+                                        --enable-languages=c,c++,go,d,fortran,objc,obj-c++
+                                        --prefix=/usr --program-suffix=-4.8
+                                        --enable-shared --enable-linker-build-id
+                                        --libexecdir=/usr/lib
+                                        --without-included-gettext
+                                        --enable-threads=posix
+                                        --with-gxx-include-dir=/usr/include/c++/4.8
+                                        --libdir=/usr/lib --enable-nls
+                                        --with-sysroot=/ --enable-clocale=gnu
+                                        --enable-libstdcxx-debug
+                                        --enable-libstdcxx-time=yes
+                                        --enable-gnu-unique-object
+                                        --disable-libmudflap --enable-plugin
+                                        --with-system-zlib --enable-objc-gc
+                                        --enable-multiarch --disable-werror
+                                        --with-arch-32=i686 --with-abi=m64
+                                        --with-multilib-list=m32,m64,mx32
+                                        --with-tune=generic
+                                        --enable-checking=release
+                                        --build=x86_64-linux-gnu
+                                        --host=x86_64-linux-gnu
+                                        --target=x86_64-linux-gnu<br>
+                                        Thread model: posix<br>
+                                        gcc version 4.8.5 (Ubuntu
+                                        4.8.5-4ubuntu8)<br>
+                                    </td></tr></tbody></table>
+                        ~> <font color="#50FA7B">g++ -v</font><br>
+                        You should see the following message:
+                        <table cellspacing="0" border="1"><tbody><tr><td>
+                                        Using built-in specs.<br>
+                                        COLLECT_GCC=g++<br>
+                                        COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/4.8/lto-wrapper<br>
+                                        Target: x86_64-linux-gnu<br>
+                                        Configured with: ../src/configure -v
+                                        --with-pkgversion='Ubuntu
+                                        4.8.5-4ubuntu8'
+                                        --with-bugurl=file:///usr/share/doc/gcc-4.8/README.Bugs
+                                        --enable-languages=c,c++,go,d,fortran,objc,obj-c++
+                                        --prefix=/usr --program-suffix=-4.8
+                                        --enable-shared --enable-linker-build-id
+                                        --libexecdir=/usr/lib
+                                        --without-included-gettext
+                                        --enable-threads=posix
+                                        --with-gxx-include-dir=/usr/include/c++/4.8
+                                        --libdir=/usr/lib --enable-nls
+                                        --with-sysroot=/ --enable-clocale=gnu
+                                        --enable-libstdcxx-debug
+                                        --enable-libstdcxx-time=yes
+                                        --enable-gnu-unique-object
+                                        --disable-libmudflap --enable-plugin
+                                        --with-system-zlib --enable-objc-gc
+                                        --enable-multiarch --disable-werror
+                                        --with-arch-32=i686 --with-abi=m64
+                                        --with-multilib-list=m32,m64,mx32
+                                        --with-tune=generic
+                                        --enable-checking=release
+                                        --build=x86_64-linux-gnu
+                                        --host=x86_64-linux-gnu
+                                        --target=x86_64-linux-gnu<br>
+                                        Thread model: posix<br>
+                                        gcc version 4.8.5 (Ubuntu
+                                        4.8.5-4ubuntu8)<br>
+                                    </td></tr></tbody></table>
+                    </li>
+                </ul>
+                <br>
+
+                <li>Create a directory called "nachos" for creating the
+                    environment of NachOS and then change directory into
+                    "nachos" directory</li>
+                <ul>
+
+                    <li type="disc">~><em> </em><font color="#50FA7B">mkdir
+                            nachos</font></li>
+                    <br>
+
+                    <li type="disc">~> <font color="#50FA7B">cd nachos</font></li>
+                </ul>
+                <br>
+
+                <li>Download the source code</li>
+                <ul>
+                    <li type="disc">Download NachOS source code:<br>
+                        ~/nachos> <font color="#50FA7B">wget
+                            https://www.fit.hcmus.edu.vn/~ntquan/os/assignment/nachos_40.tar.gz</font></li>
+                    <li type="disc">Download the source code of MIPS
+                        cross-compiler:<br>
+                        ~/nachos><font color="#50FA7B"> wget
+                            https://www.fit.hcmus.edu.vn/~ntquan/os/assignment/mips-decstation.linux-xgcc.gz</font></li>
+                    <li type="disc">Download the patch for Linux:<br>
+                        ~/nachos> <font color="#50FA7B">wget
+                            https://www.fit.hcmus.edu.vn/~ntquan/os/assignment/nachos-gcc.diff.gz</font></li>
+                </ul>
+                <br>
+
+
+                <li>Extract the zipped files and patch the Makefiles for the
+                    environment of Linux</li>
+                <ul>
+                    <li type="disc">Extract NachOS source code:<br>
+                        ~/nachos> <font color="#50FA7B">tar zxvf
+                            nachos_40.tar.gz</font></li>
+                    <li type="disc">Extract the source code of MIPS
+                        cross-compiler:<br>
+                        ~/nachos> <font color="#50FA7B">tar zxvf
+                            mips-decstation.linux-xgcc.gz</font></li>
+                    <li type="disc">Extract patch file:<br>
+                        ~/nachos> <font color="#50FA7B">tar zxvf
+                            nachos-gcc.diff.gz</font></li>
+                    <li type="disc">Patch Makefiles:<br>
+                        ~/nachos> <font color="#50FA7B">patch -p0
+                            <nachos-gcc.diff</font></li>
+                </ul>
+                <br>
+
+                <li>Compile NachOS:</li>
+                <ul>
+                    <li type="disc"> ~/nachos> <font color="#50FA7B">cd
+                            NachOS-4.0</font></li>
+
+                    <li type="disc"> ~/nachos/NachOS-4.0> <font color="#50FA7B">cd
+                            code/build.linux</font></li>
+                    <li type="disc"> ~/nachos/NachOS-4.0/code/build.linux> <font
+                            color="#50FA7B">make depend</font></li>
+                    <li type="disc"> ~/nachos/NachOS-4.0/code/build.linux> <font
+                            color="#50FA7B">make</font></li>
+                </ul>
+                <br>
+
+
+                <li>Test Nachos:</li>
+                <ul>
+                    <li type="disc"> ~/nachos/NachOS-4.0/code/build.linux> <font
+                            color="#50FA7B">./nachos</font><br>
+                        You should see the following message:
+                        <table cellspacing="0" border="1"><tbody><tr><td>
+                                        Machine halting!<br>
+                                        <br>
+                                        Ticks: total 10, idle 0, system 10, user
+                                        0<br>
+                                        Disk I/O: reads 0, writes 0<br>
+                                        Console I/O: reads 0, writes 0<br>
+                                        Paging: faults 0<br>
+                                        Network I/O: packets received 0, sent 0<br>
+                                    </td></tr></tbody></table>
+                    </li>
+
+                </ul>
+                <br>
+
+                <li>Build the tool to transfer COFF format to NOFF format (The
+                    output executible
+                    file is<font color="#009900"> coff2noff.x86Linux</font>):</li>
+                <ul>
+                    <li type="disc"> ~/nachos/NachOS-4.0/code/build.linux> <font
+                            color="#50FA7B">cd ../../coff2noff</font><br>
+                        <li type="disc"> ~/nachos/NachOS-4.0/coff2noff> <font
+                                color="#50FA7B">make</font><br>
+                        </ul>
+                        <br>
+                        <li>Compile the "test" user applications for NachOS:</li>
+                        <ul>
+                            <li type="disc"> ~/nachos/NachOS-4.0/coff2noff>
+                                <font color="#50FA7B">cd ../code/test</font><br>
+                                <li type="disc"> ~/nachos/NachOS-4.0/code/test>
+                                    <font color="#50FA7B">make</font><br>
+
+                                    <li type="disc">Use the application program
+                                        "<em><font color="#FF0000">halt</font></em>"
+                                        to test running appliction on NachOS:<br>
+                                        ~/nachos/NachOS-4.0/code/test> <font
+                                            color="#50FA7B">../build.linux/nachos
+                                            -x halt</font><br>
+                                        You should see the following message:
+                                        <table cellspacing="0" border="1"><tbody><tr><td>
+                                                        Machine halting! <br>
+                                                        <br>
+                                                        Ticks: total 22, idle 0,
+                                                        system 10, user 12<br>
+                                                        Disk I/O: reads 0,
+                                                        writes 0<br>
+                                                        Console I/O: reads 0,
+                                                        writes 0<br>
+                                                        Paging: faults 0<br>
+                                                        Network I/O: packets
+                                                        received 0, sent 0<br>
+                                                    </td></tr></tbody></table>
+                                    </li>
+
+                                </ul>
+                                <br>
+
+
+                                <li>Congratulations!!! You've succeeded.</li>
+                            </ol>
+
+                        </body>
+                    </html>
