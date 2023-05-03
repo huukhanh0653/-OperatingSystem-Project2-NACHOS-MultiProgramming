@@ -52,6 +52,8 @@
 Kernel *kernel;
 Debug *debug;
 
+#define MAINMEMORY kernel->machine->mainMemory 
+
 //----------------------------------------------------------------------
 // Cleanup
 //	Delete kernel data structures; called when user hits "ctl-C".

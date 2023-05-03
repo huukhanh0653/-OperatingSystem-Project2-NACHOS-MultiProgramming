@@ -23,6 +23,7 @@
 
 #endif
 
+
 #define UserStackSize		1024 	// increase this as necessary!
 
 class AddrSpace {
