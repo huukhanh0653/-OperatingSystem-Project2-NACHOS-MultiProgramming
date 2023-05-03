@@ -1,1 +1,1 @@
-Demo folder was cloned from : https://github.com/mdnam2410/hcmus-os-nac
+Demo folder was cloned from : https://github.com/mdnam2410/hcmus-os-nachos

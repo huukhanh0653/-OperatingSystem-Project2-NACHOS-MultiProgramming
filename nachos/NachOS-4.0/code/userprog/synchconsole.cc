@@ -54,12 +54,14 @@ SynchConsoleInput::GetChar()
 }
 
 int SynchConsoleInput::GetString(char *buffer, int size) {
+    char getchar;
     for (int i = 0; i < size; ++i) {
-        buffer[i] = GetChar();
-        if (buffer[i] == EOF) {
-            buffer[i] = 0;
+        getchar = GetChar();
+        if (getchar == EOF) {
             return -2;
         }
+        else if (i==size) return 0;
+        else buffer[i] = getchar;
     }
     return size;
 }
