@@ -57,7 +57,7 @@ int SynchConsoleInput::GetString(char *buffer, int size) {
     char getchar;
     for (int i = 0; i < size; ++i) {
         getchar = GetChar();
-        if (getchar == EOF) {
+        if (getchar == EOF || getchar == '\n') {
             return -2;
         }
         else if (i==size) return 0;
