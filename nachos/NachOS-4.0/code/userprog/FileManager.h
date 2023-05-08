@@ -3,11 +3,20 @@
 #include "machine.h"
 #include "post.h"
 
+#ifdef LINUX
+
 #include <arpa/inet.h>
-#include <stdio.h>
-#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
+#else
+
+#include <WinSock2.h>
+
+#endif
+
+#include <stdio.h>
+#include <string.h>
 
 #define MACHINE kernel->machine
 #define FILESYSTEM kernel->fileSystem
@@ -66,7 +75,11 @@ struct Socket
 struct NormalFile
 {
     char *name;
+    #ifdef LINUX
     OpenFile *FilePointer;
+    #else
+    _OpenFile * FilePointer;
+    #endif
     int currentOffset;
     ~NormalFile()
     {
@@ -298,7 +311,7 @@ public:
         for (int i = 0; i < MaxSize; i++)
             if (table[i].Name())
             {
-                if (strcasecmp(name, table[i].Name()) == 0 && table[i].Type() == type)
+                if (strcmp(name, table[i].Name()) == 0 && table[i].Type() == type)
                     return table[i].ID();
             }
         return -1;
@@ -315,8 +328,12 @@ public:
             currentSize--;
         }
         else
-        {
+        {   
+            #ifdef LINUX
             close(table[i].getSocketID());
+            #else
+            closesocket(table[i].getSocketID());
+            #endif
         }
         return 0;
     }

@@ -98,7 +98,7 @@ int ProcessTable::UpdateExecuting(char *fileName)
     // Schedule the program for execution
     DEBUG(dbgThread, "ProcessTable: Scheduling program for execution...");
     int result = blocks[slot]->Exec(fileName, slot);
-    ++totalProcesses;
+    totalProcesses++;
     semaphore->V();
     return result;
 }

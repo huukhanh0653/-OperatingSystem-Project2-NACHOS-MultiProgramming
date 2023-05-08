@@ -102,7 +102,7 @@ int PCB::Exec(char *fileName, int pid)
     this->mutex->P();
     DEBUG(dbgThread, "PCB: Setting things up for " << fileName << "...");
 
-    pid = pid;
+    this->pid = pid;
 
     // Copy the executable file name into local storage, since `fileName`
     // is going to be reused elsewhere
@@ -113,7 +113,7 @@ int PCB::Exec(char *fileName, int pid)
     this->thread = new Thread(file);
     this->thread->Fork(StartProcess, file);
     this->mutex->V();
-    return pid;
+    return this->pid;
 }
 
 void PCB::JoinWait()

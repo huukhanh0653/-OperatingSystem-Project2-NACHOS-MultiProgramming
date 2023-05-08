@@ -82,6 +82,10 @@ private:
 	int currentOffset;
 };
 
+#ifndef LINUX
+typedef OpenFile _OpenFile;
+#endif
+
 #else // FILESYS
 class FileHeader;
 
