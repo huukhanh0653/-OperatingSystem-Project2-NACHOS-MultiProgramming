@@ -22,8 +22,6 @@
 #include "thread.h"
 #include "list.h"
 
-extern Kernel* kernel;
-
 // The following class defines a "semaphore" whose value is a non-negative
 // integer.  The semaphore has only two operations P() and V():
 //
@@ -57,22 +55,6 @@ class Semaphore {
 		  	// threads waiting in P() for the value to be > 0
    };
 
-
-//* Just change function's name
-struct semaphore
-{
-  Semaphore __sem;
- 
-  void Down()
-  {
-    __sem.P();
-  }
-
-  void Up()
-  {
-    __sem.V();
-  }
-};
 // The following class defines a "lock".  A lock can be BUSY or FREE.
 // There are only two operations allowed on a lock: 
 //
