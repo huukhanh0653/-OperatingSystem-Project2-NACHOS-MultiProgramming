@@ -19,8 +19,8 @@
 #include "filesys.h"
 #include "machine.h"
 
-#include "bitmap.h"
-#include "processTable.h"
+#include "map.h"
+#include "ptable.h"
 #include "stable.h"
 
 class PostOfficeInput;
@@ -63,7 +63,7 @@ class Kernel {
 
     int hostName;               // machine identifier
 
-    Bitmap *PhysPageBitMap;
+    Map *PhysPageMap;
     Semaphore *addrLock;
     ProcessTable *processTab;
     STable *semaphoreTab;

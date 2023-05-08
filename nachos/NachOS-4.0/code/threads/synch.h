@@ -42,11 +42,12 @@ class Semaphore {
     Semaphore(char* debugName, int initialValue);	// set initial value
     ~Semaphore();   					// de-allocate semaphore
     char* getName() { return name;}			// debugging assist
-    
+
+    //* Down/Wait function -> P
     void P();	 	// these are the only operations on a semaphore
+    //* Up/Signal function -> V
     void V();	 	// they are both *atomic*
     void SelfTest();	// test routine for semaphore implementation
-    
   private:
     char* name;        // useful for debugging
     int value;         // semaphore value, always >= 0
@@ -54,6 +55,22 @@ class Semaphore {
 		  	// threads waiting in P() for the value to be > 0
    };
 
+
+//* Just change function's name
+struct semaphore
+{
+  Semaphore __sem;
+ 
+  void Down()
+  {
+    __sem.P();
+  }
+
+  void Up()
+  {
+    __sem.V();
+  }
+};
 // The following class defines a "lock".  A lock can be BUSY or FREE.
 // There are only two operations allowed on a lock: 
 //

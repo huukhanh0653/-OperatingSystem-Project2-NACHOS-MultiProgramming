@@ -6,6 +6,8 @@
         "new": "cpp",
         "system_error": "cpp",
         "iostream": "cpp",
-        "string_view": "c"
-    }
+        "string_view": "c",
+        "array": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "enabled"
 }

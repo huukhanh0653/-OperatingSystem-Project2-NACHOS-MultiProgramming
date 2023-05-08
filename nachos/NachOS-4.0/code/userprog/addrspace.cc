@@ -78,7 +78,6 @@ AddrSpace::AddrSpace()
 
 AddrSpace::~AddrSpace()
 {
-    
    delete pageTable;
 }
 
@@ -106,6 +105,13 @@ AddrSpace::Load(char *fileName)
     }
 
     // READ NOFF HEADER
+    /* 
+     Read the executable file's header to get nessessary information 
+     (architecture, code segment and data segment)
+    * Make a convertion if file's architecture is different from system
+    *    -> convert from small number to big number
+    !-- by Huu Khanh --
+    */
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) && 
 		(WordToHost(noffH.noffMagic) == NOFFMAGIC))
@@ -135,12 +141,12 @@ AddrSpace::Load(char *fileName)
 
     DEBUG(dbgAddr, "Initializing address space: " << this->numPages << ", " << size);
 
-    //! Allocate physical frames
+    // Allocate physical frames
     
     kernel->addrLock->P();
 
-    //! In case of memorial shortage
-    if (this->numPages > kernel->PhysPageBitMap->NumClear()) {
+    // In case of memorial shortage
+    if (this->numPages > kernel->PhysPageMap->numFree()) {
         cerr << "Not enough physical memory!\n";
         this->numPages = 0;
         delete executable;
@@ -148,32 +154,33 @@ AddrSpace::Load(char *fileName)
         return FALSE;
     }
 
-    //! Allocating frames: Find and get the free frames in physicalPage
+    // Allocating frames: Find and get the free frames in physicalPage
     this->pageTable = new TranslationEntry[numPages];
     for (int i = 0; i < numPages; i++) {
         this->pageTable[i].virtualPage = i;
-        //* FindAndSet() will find the free physical frames
-        int freeFrame = kernel->PhysPageBitMap->FindAndSet();
-        this->pageTable[i].physicalPage = freeFrame;
+        //* Find free frames and set it as being used
+        int freePosition = kernel->PhysPageMap->findFree();
+        this->pageTable[i].physicalPage = freePosition;
         DEBUG(
             dbgAddr,
             "Assigned virtual page " << this->pageTable[i].virtualPage <<
             " to frame " << this->pageTable[i].physicalPage
         );
-        ASSERT(freeFrame != -1);
+        ASSERT(freePosition != -1);
 
         this->pageTable[i].valid = TRUE;
         this->pageTable[i].use = FALSE;
         this->pageTable[i].dirty = FALSE;
         this->pageTable[i].readOnly = FALSE;
         
-        // Zero out these frames
+        // Zero out these frames -> clear memory to use.      
         bzero(
             kernel->machine->mainMemory + this->pageTable[i].physicalPage * PageSize,
             PageSize
         );
     }
 
+    //? Khoi tao mot buffer voi kich thuoc bang tong kich thuoc cac segment cua file thuc thi
     int actualSize = noffH.code.size + noffH.initData.size + noffH.uninitData.size;
     char *buffer = new char[actualSize];
     for (int i = 0; i < actualSize; ++i) {
@@ -181,7 +188,7 @@ AddrSpace::Load(char *fileName)
     }
 
     int numSegments = 3;
-    Segment *segment[] = {&noffH.code, &noffH.uninitData, &noffH.initData};
+    Segment *segment[] = {&noffH.code, &noffH.initData, &noffH.uninitData};
     for (int i = 0; i < numSegments; ++i) {
         // The virtual address of the segment in the NOFF file is the same as
         // the virtual address of the starting position of the segment in the
