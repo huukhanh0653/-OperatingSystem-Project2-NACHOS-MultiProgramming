@@ -49,8 +49,8 @@
 
 
 // global variables
-Kernel *kernel;
-Debug *debug;
+extern Kernel *kernel;
+extern Debug *debug;
 
 #define MAINMEMORY kernel->machine->mainMemory 
 

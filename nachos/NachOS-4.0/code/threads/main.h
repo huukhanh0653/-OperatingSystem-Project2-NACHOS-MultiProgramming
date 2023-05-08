@@ -12,9 +12,8 @@
 #include "debug.h"
 #include "kernel.h"
 
-extern Kernel *kernel;
-extern Debug *debug;
-
+Kernel *kernel;
+Debug *debug;
 
 #endif // MAIN_H
 
