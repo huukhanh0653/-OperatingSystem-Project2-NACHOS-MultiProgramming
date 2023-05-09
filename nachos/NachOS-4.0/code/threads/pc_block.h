@@ -4,6 +4,8 @@
 #include "synch.h"
 #include "thread.h"
 
+class Semaphore;
+
 // The process control block
 //
 //!stores and manages information necessary to execute and join

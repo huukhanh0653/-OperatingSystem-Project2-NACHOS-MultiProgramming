@@ -7,6 +7,8 @@
 
 #define MAX_PROCESSES 10
 
+class Semaphore;
+
 // Process Table
 class ProcessTable {
 
