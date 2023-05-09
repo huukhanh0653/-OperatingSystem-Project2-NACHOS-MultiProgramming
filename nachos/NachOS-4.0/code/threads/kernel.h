@@ -18,7 +18,6 @@
 #include "alarm.h"
 #include "filesys.h"
 #include "machine.h"
-#include "kernel.h"
 
 #include "map.h"
 #include "ptable.h"
