@@ -77,9 +77,9 @@ class Lock {
     void Acquire(); 		// these are the only operations on a lock
     void Release(); 		// they are both *atomic*
 
-    bool IsHeldByCurrentThread() {
+    bool IsHeldByCurrentThread(Thread* currentThread) {
 
-    		return (lockHolder == kernel->currentThread)? true:false; }
+    		return (lockHolder == currentThread)? true:false; }
     				// return true if the current thread 
 				// holds this lock.
     
