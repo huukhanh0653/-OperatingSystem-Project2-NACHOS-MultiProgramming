@@ -16,8 +16,8 @@
 #include "copyright.h"
 #include "filesys.h"
 
-#ifndef NOFF_H
-#define NOFF_H
+#ifndef CALLNOFF_H
+#define CALLNOFF_H
 
 #include "noff.h"
 #endif
