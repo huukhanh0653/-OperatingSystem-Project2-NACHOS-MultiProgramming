@@ -1,7 +1,8 @@
 #include "ptable.h"
 
-#include "bitmap.h"
+//#include "bitmap.h"
 #include "synch.h"
+#include "map.h"
 
 #include <stdio.h>
 
