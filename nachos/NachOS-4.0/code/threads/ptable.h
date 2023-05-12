@@ -5,6 +5,7 @@
 #include "synch.h"
 #include "thread.h"
 #include "map.h"
+#include "main.h"
 
 #include <stdio.h>
 
