@@ -36,7 +36,7 @@ public:
     // Allocates the start up process (first executed by Nachos)
     void InitializeFirstProcess(const char* fileName, Thread* thread);
 
-    int GetCurrentThreadId();
+    int GetCurrentThreadId(Thread* currentThread);
 
     // Sets up PCB and schedules the program stored in `fileName`.
     // Returns the process id on success, -1 otherwise
@@ -91,11 +91,11 @@ void ProcessTable::InitializeFirstProcess(const char *fileName, Thread* thread)
     reception->mark(0);
 }
 
-int ProcessTable::GetCurrentThreadId()
+int ProcessTable::GetCurrentThreadId(Thread* currentThread)
 {
     for (int i = 0; i < MAX_PROCESSES; ++i) {
         if (blocks[i] != 0) {
-            if (blocks[i]->GetThread() == kernel->currentThread) {
+            if (blocks[i]->GetThread() == currentThread) {
                 return blocks[i]->GetID();
             }
         }
@@ -134,7 +134,7 @@ int ProcessTable::UpdateExecuting(char *fileName)
 
     // Prevent self-execution
     DEBUG(dbgThread, "ProcessTable: Checking " << fileName << " for self-execution...");
-    int currentThreadId = GetCurrentThreadId();
+    int currentThreadId = GetCurrentThreadId(kernel->currentThread);
     if (strcmp(blocks[currentThreadId]->GetExecutableFileName(), fileName) == 0) {
         cerr << "ProcessTable: %s cannot execute itself.\n", fileName;
         semaphore->V();
@@ -164,7 +164,7 @@ int ProcessTable::UpdateExecuting(char *fileName)
 
 int ProcessTable::UpdateJoining(int id)
 {
-    int currentThreadId = GetCurrentThreadId();
+    int currentThreadId = GetCurrentThreadId(kernel->currentThread);
     if (!IsExist(id)) {
         fprintf(
             stderr,
@@ -203,7 +203,7 @@ int ProcessTable::UpdateJoining(int id)
 
 int ProcessTable::UpdateExiting(int ec)
 {
-    int currentThreadId = GetCurrentThreadId();
+    int currentThreadId = GetCurrentThreadId(kernel->currentThread);
     if (currentThreadId == 0) {
         kernel->interrupt->Halt();
     } else {
@@ -219,7 +219,7 @@ void ProcessTable::Print()
     printf("\n\nTime: %d\n", kernel->stats->totalTicks);
     printf("Current process table:\n");
     printf("ID\tParent\tExecutable File\n");
-    int currentThreadId = GetCurrentThreadId();
+    int currentThreadId = GetCurrentThreadId(kernel->currentThread);
     for (int i = 0; i < MAX_PROCESSES; ++i) {
         if (blocks[i]) {
             printf(
