@@ -65,10 +65,10 @@ class Kernel {
 
     int hostName;               // machine identifier
 
-    Map *PhysPageMap;
-    Semaphore *addrLock;
-    ProcessTable *processTab;
-    STable *semaphoreTab;
+    //! Map *PhysPageMap;
+    //! Semaphore *addrLock;
+    //! ProcessTable *processTab;
+    //! STable *semaphoreTab;
 
   private:
     bool randomSlice;		// enable pseudo-random time slicing
