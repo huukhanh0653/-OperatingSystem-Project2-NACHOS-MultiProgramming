@@ -28,6 +28,8 @@ class PostOfficeOutput;
 class SynchConsoleInput;
 class SynchConsoleOutput;
 class SynchDisk;
+class ProcessTable;
+
 
 class Kernel {
   public:
