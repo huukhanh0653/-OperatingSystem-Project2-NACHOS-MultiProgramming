@@ -19,6 +19,9 @@
 #include "filesys.h"
 #include "machine.h"
 
+#include "stable.h"
+#include "map.h"
+
 class PostOfficeInput;
 class PostOfficeOutput;
 class SynchConsoleInput;
@@ -59,6 +62,10 @@ class Kernel {
     PostOfficeOutput *postOfficeOut;
 
     int hostName;               // machine identifier
+
+    Map *PhysPageMap;
+    Semaphore *addrLock;
+    STable *semaphoreTab;
 
   private:
     bool randomSlice;		// enable pseudo-random time slicing

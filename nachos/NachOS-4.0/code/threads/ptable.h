@@ -13,6 +13,7 @@
 #define MAX_PROCESSES 10
 
 class Semaphore;
+class PCB;
 
 // Process Table
 class ProcessTable {

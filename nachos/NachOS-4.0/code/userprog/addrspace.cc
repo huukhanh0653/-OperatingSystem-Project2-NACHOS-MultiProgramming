@@ -20,6 +20,7 @@
 #include "addrspace.h"
 #include "machine.h"
 #include "noff.h"
+#include "ThreadManager.h"
 
 //----------------------------------------------------------------------
 // SwapHeader
