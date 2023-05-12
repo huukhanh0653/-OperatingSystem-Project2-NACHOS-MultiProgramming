@@ -5,6 +5,7 @@
 #include "syscall.h"
 #include "ksyscall.h"
 #include "stable.h"
+#include "ThreadManager.h"
 
 #define MaxFileNameLength 32
 

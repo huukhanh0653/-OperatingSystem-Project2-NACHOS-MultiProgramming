@@ -1,5 +1,7 @@
 #include "exception_utils.h"
 
+ThreadController Tab;
+
 //!---------------------- PART II - Multiple Processing -------------------------------
 // Usage: create a process from a program and schedule it for execution
 // Input: address to the program name
@@ -16,7 +18,7 @@ void HandleExec()
 	DEBUG(dbgSys, "Read file name: " << fileName);
 
 	DEBUG(dbgSys, "Scheduling execution...");
-	int result = kernel->processTab->UpdateExecuting(fileName);
+	int result = Tab.processTab->UpdateExecuting(fileName);
 
 	DEBUG(dbgSys, "Writing result to register 2: " << result);
 	kernel->machine->WriteRegister(2, result);
@@ -31,7 +33,7 @@ void HandleJoin()
 {
 	DEBUG(dbgSys, "Syscall: Join");
 	int id = kernel->machine->ReadRegister(4);
-	int result = kernel->processTab->UpdateJoining(id);
+	int result = Tab.processTab->UpdateJoining(id);
 	kernel->machine->WriteRegister(2, result);
     return IncPC();
 }
@@ -43,7 +45,7 @@ void HandleExit()
 {
 	DEBUG(dbgSys, "Syscall: Exit");
 	int exitCode = kernel->machine->ReadRegister(4);
-	int result = kernel->processTab->UpdateExiting(exitCode);
+	int result = Tab.processTab->UpdateExiting(exitCode);
     return IncPC();
 }
 
@@ -67,7 +69,7 @@ void HandleCreateSemaphore()
 		return;
 	}
 	
-	int res = kernel->semaphoreTab->Create(name, semVal);
+	int res = Tab.semaphoreTab->Create(name, semVal);
 
 	// Check error
 	if(res == -1)
@@ -100,7 +102,7 @@ void HandleWait()
 		return;
 	}
 
-	int res = kernel->semaphoreTab->Wait(name);
+	int res = Tab.semaphoreTab->Wait(name);
 	
 	// Check error
 	if(res == -1)
@@ -133,7 +135,7 @@ void HandleSignal()
 		return;
 	}
 	
-	int res = kernel->semaphoreTab->Signal(name);
+	int res = Tab.semaphoreTab->Signal(name);
 
 	// Check error
 	if(res == -1)
