@@ -1,11 +1,11 @@
 #ifndef PTABLE_H
 #define PTABLE_H
 
+#include "main.h"
 #include "pc_block.h"
 #include "synch.h"
 #include "thread.h"
 #include "map.h"
-#include "main.h"
 
 #include <stdio.h>
 
@@ -136,7 +136,7 @@ int ProcessTable::UpdateExecuting(char *fileName)
     DEBUG(dbgThread, "ProcessTable: Checking " << fileName << " for self-execution...");
     int currentThreadId = GetCurrentThreadId();
     if (strcmp(blocks[currentThreadId]->GetExecutableFileName(), fileName) == 0) {
-        fprintf(stderr, "ProcessTable: %s cannot execute itself.\n", fileName);
+        cerr << "ProcessTable: %s cannot execute itself.\n", fileName;
         semaphore->V();
         return -1;
     }
@@ -145,11 +145,11 @@ int ProcessTable::UpdateExecuting(char *fileName)
     DEBUG(dbgThread, "ProcessTable: Looking for free slot in process table...");
     int slot = GetFreeSlot();
     if (slot == -1) {
-        fprintf(stderr, "ProcessTable: Maximum number of processes reached.\n");
+        cerr << "ProcessTable: Maximum number of processes reached.\n";
         semaphore->V();
         return -1;
     }
-    DEBUG(dbgThread, "ProcessTable: Obtained slot " << slot);
+
     // PID = slot number
     blocks[slot] = new PCB();
     blocks[slot]->parentID = currentThreadId;
