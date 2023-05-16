@@ -17,6 +17,6 @@ public:
     ~ThreadController()
     {
 
-        delete processTab;
+    
     }
 };

@@ -110,7 +110,7 @@ AddrSpace::Load(char *fileName)
      Read the executable file's header to get nessessary information 
      (architecture, code segment and data segment)
     * Make a convertion if file's architecture is different from system
-    *    -> convert from small number to big number
+    -> convert from small number to big number
     !-- by Huu Khanh --
     */
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);

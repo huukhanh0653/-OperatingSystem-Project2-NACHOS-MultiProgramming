@@ -4,8 +4,6 @@
 #include "synch.h"
 #include "map.h"
 
-class Semaphore;
-
 #define MAX_SEMAPHORE 10
 
 //* SEMAPHORE TABLE

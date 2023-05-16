@@ -25,6 +25,7 @@ class Semaphore;
 //
 // Instances of this class are entries in the system-wide process table,
 // manage by PTable
+// -> Process Control Block
 
 class PCB {
 
