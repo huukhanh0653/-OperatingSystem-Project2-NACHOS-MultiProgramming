@@ -1,7 +1,7 @@
 #ifndef STABLE_H
 #define STABLE_H
 
-#include "synch.h"
+#include "main.h"
 #include "map_semaphore.h"
 
 #define MAX_SEMAPHORE 10
