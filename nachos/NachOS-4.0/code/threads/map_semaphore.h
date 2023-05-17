@@ -68,94 +68,94 @@ public:
     }
 };
 
-class MySemaphore
-{
-public:
-    MySemaphore(char *debugName, int initialValue); // set initial value
-    ~MySemaphore();                                 // de-allocate MySemaphore
-    char *getName() { return name; }              // debugging assist
+// class MySemaphore
+// {
+// public:
+//     MySemaphore(char *debugName, int initialValue); // set initial value
+//     ~MySemaphore();                                 // de-allocate MySemaphore
+//     char *getName() { return name; }              // debugging assist
 
-    //* Down/Wait function -> P
-    void P(); // these are the only operations on a MySemaphore
-    //* Up/Signal function -> V
-    void V();        // they are both *atomic*
-    void SelfTest(); // test routine for MySemaphore implementation
-private:
-    char *name; // useful for debugging
-    int value;  // MySemaphore value, always >= 0
-    List<Thread *> *queue;
-};
+//     //* Down/Wait function -> P
+//     void P(); // these are the only operations on a MySemaphore
+//     //* Up/Signal function -> V
+//     void V();        // they are both *atomic*
+//     void SelfTest(); // test routine for MySemaphore implementation
+// private:
+//     char *name; // useful for debugging
+//     int value;  // MySemaphore value, always >= 0
+//     List<Thread *> *queue;
+// };
 
-MySemaphore::MySemaphore(char *debugName, int initialValue)
-{
-    name = debugName;
-    value = initialValue;
-    queue = new List<Thread *>;
-}
+// MySemaphore::MySemaphore(char *debugName, int initialValue)
+// {
+//     name = debugName;
+//     value = initialValue;
+//     queue = new List<Thread *>;
+// }
 
-//----------------------------------------------------------------------
-// MySemaphore::MySemaphore
-// 	De-allocate MySemaphore, when no longer needed.  Assume no one
-//	is still waiting on the MySemaphore!
-//----------------------------------------------------------------------
+// //----------------------------------------------------------------------
+// // MySemaphore::MySemaphore
+// // 	De-allocate MySemaphore, when no longer needed.  Assume no one
+// //	is still waiting on the MySemaphore!
+// //----------------------------------------------------------------------
 
-MySemaphore::~MySemaphore()
-{
-    delete queue;
-}
+// MySemaphore::~MySemaphore()
+// {
+//     delete queue;
+// }
 
-//----------------------------------------------------------------------
-// MySemaphore::P
-// 	Wait until MySemaphore value > 0, then decrement.  Checking the
-//	value and decrementing must be done atomically, so we
-//	need to disable interrupts before checking the value.
-//
-//	Note that Thread::Sleep assumes that interrupts are disabled
-//	when it is called.
-//----------------------------------------------------------------------
+// //----------------------------------------------------------------------
+// // MySemaphore::P
+// // 	Wait until MySemaphore value > 0, then decrement.  Checking the
+// //	value and decrementing must be done atomically, so we
+// //	need to disable interrupts before checking the value.
+// //
+// //	Note that Thread::Sleep assumes that interrupts are disabled
+// //	when it is called.
+// //----------------------------------------------------------------------
 
-void MySemaphore::P()
-{
-    Interrupt *interrupt = kernel->interrupt;
-    Thread *currentThread = kernel->currentThread;
+// void MySemaphore::P()
+// {
+//     Interrupt *interrupt = kernel->interrupt;
+//     Thread *currentThread = kernel->currentThread;
 
-    // disable interrupts
-    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+//     // disable interrupts
+//     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    while (value == 0)
-    {                                 // MySemaphore not available
-        queue->Append(currentThread); // so go to sleep
-        currentThread->Sleep(FALSE);
-    }
-    value--; // MySemaphore available, consume its value
+//     while (value == 0)
+//     {                                 // MySemaphore not available
+//         queue->Append(currentThread); // so go to sleep
+//         currentThread->Sleep(FALSE);
+//     }
+//     value--; // MySemaphore available, consume its value
 
-    // re-enable interrupts
-    (void)interrupt->SetLevel(oldLevel);
-}
+//     // re-enable interrupts
+//     (void)interrupt->SetLevel(oldLevel);
+// }
 
-//----------------------------------------------------------------------
-// MySemaphore::V
-// 	Increment MySemaphore value, waking up a waiter if necessary.
-//	As with P(), this operation must be atomic, so we need to disable
-//	interrupts.  Scheduler::ReadyToRun() assumes that interrupts
-//	are disabled when it is called.
-//----------------------------------------------------------------------
+// //----------------------------------------------------------------------
+// // MySemaphore::V
+// // 	Increment MySemaphore value, waking up a waiter if necessary.
+// //	As with P(), this operation must be atomic, so we need to disable
+// //	interrupts.  Scheduler::ReadyToRun() assumes that interrupts
+// //	are disabled when it is called.
+// //----------------------------------------------------------------------
 
-void MySemaphore::V()
-{
-    Interrupt *interrupt = kernel->interrupt;
+// void MySemaphore::V()
+// {
+//     Interrupt *interrupt = kernel->interrupt;
 
-    // disable interrupts
-    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+//     // disable interrupts
+//     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    if (!queue->IsEmpty())
-    { // make thread ready.
-        kernel->scheduler->ReadyToRun(queue->RemoveFront());
-    }
-    value++;
+//     if (!queue->IsEmpty())
+//     { // make thread ready.
+//         kernel->scheduler->ReadyToRun(queue->RemoveFront());
+//     }
+//     value++;
 
-    // re-enable interrupts
-    (void)interrupt->SetLevel(oldLevel);
-}
+//     // re-enable interrupts
+//     (void)interrupt->SetLevel(oldLevel);
+// }
 
 #endif
