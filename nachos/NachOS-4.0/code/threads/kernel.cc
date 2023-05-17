@@ -131,6 +131,11 @@ Kernel::~Kernel()
     delete fileSystem;
     delete postOfficeIn;
     delete postOfficeOut;
+
+    //-> For NACHOS_P2
+    delete addrLock;
+    delete physPageMap;
+    delete semaphoreTab;
     
     Exit(0);
 }
