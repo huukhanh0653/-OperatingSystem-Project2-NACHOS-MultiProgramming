@@ -45,7 +45,6 @@ int STable::Create(char *name, int value)
 				return -1;
 			}
 		}
-		
 	}
 	// Find free slot in table
 	int id = this->FindFreeSlot();

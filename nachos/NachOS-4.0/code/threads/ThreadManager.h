@@ -1,7 +1,7 @@
 #include "main.h"
 #include "ptable.h"
 #include "stable.h"
-#include "map.h"
+#include "map_semaphore.h"
 #include "machine.h"
 
 class ThreadController

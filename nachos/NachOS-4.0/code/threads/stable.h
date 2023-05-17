@@ -2,20 +2,20 @@
 #define STABLE_H
 
 #include "synch.h"
-#include "map.h"
-
-class Semaphore;
+#include "map_semaphore.h"
 
 #define MAX_SEMAPHORE 10
 
-//* SEMAPHORE TABLE
+class MySemaphore;
+
+//* MySemaphore TABLE
 class STable
 {
 private:
     // Manager empty slot
     Map *map;
-    // Lock manger (10 semaphore)
-    Semaphore *table[MAX_SEMAPHORE];
+    // Lock manger (10 MySemaphore)
+    MySemaphore *table[MAX_SEMAPHORE];
 
 public:
     // Constructor
@@ -68,14 +68,14 @@ STable::~STable()
 
 int STable::Create(char *name, int value)
 {
-    DEBUG(dbgSynch, "STable::Create semaphore " << name << " - " << value);
+    DEBUG(dbgSynch, "STable::Create MySemaphore " << name << " - " << value);
     for (int i = 0; i < MAX_SEMAPHORE; i++)
     {
         if (!this->map->isFree(i))
         {
             if (strcmp(name, table[i]->getName()) == 0)
             {
-                DEBUG(dbgSynch, "STable: Find existed semaphore");
+                DEBUG(dbgSynch, "STable: Find existed MySemaphore");
                 return -1;
             }
         }
@@ -89,7 +89,7 @@ int STable::Create(char *name, int value)
         return -1;
     }
 
-    this->table[id] = new Semaphore(name, value);
+    this->table[id] = new MySemaphore(name, value);
     DEBUG(dbgSynch, "STable: Create in table[" << id << "]");
     return 0;
 }
@@ -99,20 +99,20 @@ int STable::Wait(char *name)
     DEBUG(dbgSynch, "STable::Wait(\"" << name << "\")");
     for (int i = 0; i < MAX_SEMAPHORE; i++)
     {
-        // Check does slot[i] load semaphore
+        // Check does slot[i] load MySemaphore
         if (!this->map->isFree(i))
         {
-            // if yes then compare nam with name of semaphore in table
+            // if yes then compare nam with name of MySemaphore in table
             if (strcmp(name, table[i]->getName()) == 0)
             {
-                // If exist then make semaphore down()
-                // DEBUG(dbgSynch, "STable: Find semaphore in table[" << i << "]");
+                // If exist then make MySemaphore down()
+                // DEBUG(dbgSynch, "STable: Find MySemaphore in table[" << i << "]");
                 table[i]->P();
                 return 0;
             }
         }
     }
-    DEBUG(dbgSynch, "Not exists semaphore in wait");
+    DEBUG(dbgSynch, "Not exists MySemaphore in wait");
     return -1;
 }
 
@@ -121,20 +121,20 @@ int STable::Signal(char *name)
     DEBUG(dbgSynch, "STable::Signal(\"" << name << "\")");
     for (int i = 0; i < MAX_SEMAPHORE; i++)
     {
-        // Check does slot[i] load semaphore
+        // Check does slot[i] load MySemaphore
         if (!this->map->isFree(i))
         {
-            // if yes then compare nam with name of semaphore in table
+            // if yes then compare nam with name of MySemaphore in table
             if (strcmp(name, table[i]->getName()) == 0)
             {
-                // If exist then make semaphore up()
-                // DEBUG(dbgSynch, "STable: Find semaphore in table[" << i << "]");
+                // If exist then make MySemaphore up()
+                // DEBUG(dbgSynch, "STable: Find MySemaphore in table[" << i << "]");
                 table[i]->V();
                 return 0;
             }
         }
     }
-    DEBUG(dbgSynch, "Not exists semaphore in signal");
+    DEBUG(dbgSynch, "Not exists MySemaphore in signal");
     return -1;
 }
 

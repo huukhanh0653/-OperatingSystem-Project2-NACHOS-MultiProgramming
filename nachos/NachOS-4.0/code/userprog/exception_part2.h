@@ -69,7 +69,7 @@ void HandleCreateSemaphore()
 		return;
 	}
 	
-	int res = Tab.semaphoreTab->Create(name, semVal);
+	int res = kernel->semaphoreTab->Create(name, semVal);
 
 	// Check error
 	if(res == -1)
@@ -102,7 +102,7 @@ void HandleWait()
 		return;
 	}
 
-	int res = Tab.semaphoreTab->Wait(name);
+	int res = kernel->semaphoreTab->Wait(name);
 	
 	// Check error
 	if(res == -1)
@@ -135,7 +135,7 @@ void HandleSignal()
 		return;
 	}
 	
-	int res = Tab.semaphoreTab->Signal(name);
+	int res = kernel->semaphoreTab->Signal(name);
 
 	// Check error
 	if(res == -1)

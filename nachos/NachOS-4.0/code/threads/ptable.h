@@ -5,7 +5,7 @@
 #include "pc_block.h"
 #include "synch.h"
 #include "thread.h"
-#include "map.h"
+#include "map_semaphore.h"
 
 #include <stdio.h>
 

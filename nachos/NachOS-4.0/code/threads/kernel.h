@@ -20,7 +20,7 @@
 #include "machine.h"
 
 #include "stable.h"
-#include "map.h"
+#include "map_semaphore.h"
 
 class PostOfficeInput;
 class PostOfficeOutput;
