@@ -1,6 +1,6 @@
 #include "exception_utils.h"
 
-ThreadController Tab;
+//ThreadController Tab;
 
 //!---------------------- PART II - Multiple Processing -------------------------------
 // Usage: create a process from a program and schedule it for execution
@@ -18,7 +18,7 @@ void HandleExec()
 	DEBUG(dbgSys, "Read file name: " << fileName);
 
 	DEBUG(dbgSys, "Scheduling execution...");
-	int result = Tab.processTab->UpdateExecuting(fileName);
+	int result = kernel->processTab->UpdateExecuting(fileName);
 
 	DEBUG(dbgSys, "Writing result to register 2: " << result);
 	kernel->machine->WriteRegister(2, result);
@@ -33,7 +33,7 @@ void HandleJoin()
 {
 	DEBUG(dbgSys, "Syscall: Join");
 	int id = kernel->machine->ReadRegister(4);
-	int result = Tab.processTab->UpdateJoining(id);
+	int result = kernel->processTab->UpdateJoining(id);
 	kernel->machine->WriteRegister(2, result);
     return IncPC();
 }
@@ -45,7 +45,7 @@ void HandleExit()
 {
 	DEBUG(dbgSys, "Syscall: Exit");
 	int exitCode = kernel->machine->ReadRegister(4);
-	int result = Tab.processTab->UpdateExiting(exitCode);
+	int result = kernel->processTab->UpdateExiting(exitCode);
     return IncPC();
 }
 

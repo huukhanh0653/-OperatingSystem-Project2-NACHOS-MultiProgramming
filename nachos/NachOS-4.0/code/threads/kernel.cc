@@ -18,6 +18,9 @@
 #include "synchdisk.h"
 #include "post.h"
 
+#include "ptable.h"
+#include "stable.h"
+#include "map_semaphore.h"
 
 //----------------------------------------------------------------------
 // Kernel::Kernel

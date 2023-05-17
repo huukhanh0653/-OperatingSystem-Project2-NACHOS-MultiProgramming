@@ -29,10 +29,6 @@ class SynchConsoleInput;
 class SynchConsoleOutput;
 class SynchDisk;
 
-class PTable;
-class STable;
-class Semaphore;
-
 class Kernel
 {
 public:

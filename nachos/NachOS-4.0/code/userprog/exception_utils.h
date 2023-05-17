@@ -4,8 +4,7 @@
 #include "main.h"
 #include "syscall.h"
 #include "ksyscall.h"
-#include "stable.h"
-#include "ThreadManager.h"
+#include "ptable.h"
 
 #define MaxFileNameLength 32
 
