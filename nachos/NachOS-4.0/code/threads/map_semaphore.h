@@ -3,7 +3,7 @@
 
 #include "thread.h"
 #include "list.h"
-#include "main.h"
+#include "threads/main.h"
 /*
     This class is similarly defined to bitmap but simpler
     because I've not understood the bit operation just like: AND, OR, etc.
