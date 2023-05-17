@@ -31,7 +31,7 @@ private:
     // The thread object to be run
     Thread *thread;
     // Number of joined processes
-    int numwait;
+    int numwait; // Note: tell us how many process are waiting
     // Semaphore to use for controlling join process
     Semaphore *joinsemaphore;
     // Semaphore to use for controlling exit process
