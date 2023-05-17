@@ -66,7 +66,7 @@ public:
 
   Map* physPageMap;
   Semaphore *addrLock;
-  PTable *processTab;
+  ProcessTable *processTab;
   STable *semaphoreTab;
 
 private:
