@@ -19,15 +19,11 @@
 #include "filesys.h"
 #include "machine.h"
 
-#include "stable.h"
-#include "map_semaphore.h"
-
 class PostOfficeInput;
 class PostOfficeOutput;
 class SynchConsoleInput;
 class SynchConsoleOutput;
 class SynchDisk;
-
 
 class Kernel {
   public:
@@ -63,10 +59,6 @@ class Kernel {
 
     int hostName;               // machine identifier
 
-    Map *PhysPageMap;
-    Semaphore *addrLock;
-    STable *semaphoreTab;
-
   private:
     bool randomSlice;		// enable pseudo-random time slicing
     bool debugUserProg;         // single step user program
@@ -80,5 +72,4 @@ class Kernel {
 
 
 #endif // KERNEL_H
-
 
