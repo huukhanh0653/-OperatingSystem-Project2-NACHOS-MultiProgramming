@@ -1,4 +1,5 @@
 #include "stable.h"
+#include "map_semaphore.h"
 
 STable::STable()
 {

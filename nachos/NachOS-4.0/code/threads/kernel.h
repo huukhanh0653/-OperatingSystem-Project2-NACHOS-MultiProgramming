@@ -29,6 +29,11 @@ class SynchConsoleInput;
 class SynchConsoleOutput;
 class SynchDisk;
 
+class Map;
+class Semaphore;
+class ProcessTable;
+class STable;
+
 class Kernel
 {
 public:
@@ -64,7 +69,7 @@ public:
 
   int hostName; // machine identifier
 
-  Map* physPageMap;
+  Map *physPageMap;
   Semaphore *addrLock;
   ProcessTable *processTab;
   STable *semaphoreTab;
