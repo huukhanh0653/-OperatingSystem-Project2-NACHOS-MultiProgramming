@@ -18,6 +18,7 @@
 #include "synchdisk.h"
 #include "post.h"
 
+#include "pcblock.h"
 #include "ptable.h"
 #include "stable.h"
 #include "map_semaphore.h"
