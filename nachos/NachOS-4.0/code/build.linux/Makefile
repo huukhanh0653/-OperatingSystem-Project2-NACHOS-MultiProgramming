@@ -273,8 +273,7 @@ THREAD_H = ../threads/alarm.h\
 	../threads/thread.h\
 	../threads/stable.h\
 	../threads/ptable.h\
-	../threads/pcblock.h\
-	../threads/map_semaphore.h
+	../threads/pcblock.h
 
 THREAD_C = ../threads/alarm.cc\
 	../threads/kernel.cc\
