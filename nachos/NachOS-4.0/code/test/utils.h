@@ -15,8 +15,6 @@ void strCopy(char *dest, const char *src)
 
 int len(char *str)
 {
-    char* temp;
-    strCopy()
     int len = 0;
     while (*str != '\0')
     {
