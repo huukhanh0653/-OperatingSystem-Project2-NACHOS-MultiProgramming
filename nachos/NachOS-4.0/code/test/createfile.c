@@ -1,6 +1,5 @@
 #include "syscall.h"
 #include "utils.h"
-#include <string.h>
 
 int main()
 {
@@ -21,7 +20,7 @@ int main()
     { // default method of createfile: create a file name "newfile.txt"
         if (Create("newfile.txt") == 0)
         {
-            
+
             Write("\nFile ", 10, 1);
             Write("newfile.txt", 20, 1);
             Write("Created successfully!\n\n", 50, 1);
