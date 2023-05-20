@@ -71,9 +71,12 @@ public:
   int hostName; // machine identifier
 
   Semaphore *addrLock; // -> ???
+  //-> Physical Page Bitmap
   Bitmap *physPageBitMap;
+  //-> Process Table (Process control blocks handler)
   PTable *pTable;
-  STable *semaphoreTable;
+  //-> Semaphore Table (for Syscall: CreateSemaphore)
+  STable *sTable;
 
 private:
   bool randomSlice;   // enable pseudo-random time slicing

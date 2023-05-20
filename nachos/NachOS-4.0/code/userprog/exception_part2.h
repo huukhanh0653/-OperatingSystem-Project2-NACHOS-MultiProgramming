@@ -18,7 +18,7 @@ void HandleExec()
 	DEBUG(dbgSys, "Read file name: " << fileName);
 
 	DEBUG(dbgSys, "Scheduling execution...");
-	int result = kernel->processTab->UpdateExecuting(fileName);
+	int result = kernel->pTable->ExecuteUpdate(fileName);
 
 	DEBUG(dbgSys, "Writing result to register 2: " << result);
 	kernel->machine->WriteRegister(2, result);
@@ -33,7 +33,7 @@ void HandleJoin()
 {
 	DEBUG(dbgSys, "Syscall: Join");
 	int id = kernel->machine->ReadRegister(4);
-	int result = kernel->processTab->UpdateJoining(id);
+	int result = kernel->pTable->JoinUpdate(id);
 	kernel->machine->WriteRegister(2, result);
     return IncPC();
 }
@@ -45,7 +45,7 @@ void HandleExit()
 {
 	DEBUG(dbgSys, "Syscall: Exit");
 	int exitCode = kernel->machine->ReadRegister(4);
-	int result = kernel->processTab->UpdateExiting(exitCode);
+	int result = kernel->pTable->ExitUpdate(exitCode);
     return IncPC();
 }
 
@@ -69,7 +69,7 @@ void HandleCreateSemaphore()
 		return;
 	}
 	
-	int res = kernel->semaphoreTab->Create(name, semVal);
+	int res = kernel->sTable->Create(name, semVal);
 
 	// Check error
 	if(res == -1)
@@ -102,7 +102,7 @@ void HandleWait()
 		return;
 	}
 
-	int res = kernel->semaphoreTab->Wait(name);
+	int res = kernel->sTable->Wait(name);
 	
 	// Check error
 	if(res == -1)
@@ -135,7 +135,7 @@ void HandleSignal()
 		return;
 	}
 	
-	int res = kernel->semaphoreTab->Signal(name);
+	int res = kernel->sTable->Signal(name);
 
 	// Check error
 	if(res == -1)
