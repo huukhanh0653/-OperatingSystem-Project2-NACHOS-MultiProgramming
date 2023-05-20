@@ -7,6 +7,7 @@
 #include "main.h"
 #include "synch.h"
 #include "thread.h"
+#include "bitmap.h"
 
 class Semaphore;
 // The process control block

@@ -5,6 +5,7 @@
 #include "pcblock.h"
 #include "synch.h"
 #include "thread.h"
+#include "bitmap.h"
 
 #include <stdio.h>
 

@@ -2,8 +2,8 @@
 #define STABLE_H
 
 #include "main.h"
-#include "map_semaphore.h"
 #include "synch.h"
+#include "bitmap.h"
 
 #define MAX_SEMAPHORE 10
 
