@@ -5,7 +5,7 @@
  *
  */
 #include "syscall.h"
-#include "Utilities.h"
+#include "utils.h"
 
 #define CONSOLE_INPUT 0
 #define CONSOLE_OUTPUT 1
