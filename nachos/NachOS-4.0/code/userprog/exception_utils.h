@@ -6,7 +6,6 @@
 #include "ksyscall.h"
 #include "ptable.h"
 #include "stable.h"
-#include "map_semaphore.h"
 #include "pcblock.h"
 
 #define MaxFileNameLength 32
