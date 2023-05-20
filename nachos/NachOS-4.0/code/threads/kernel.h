@@ -31,7 +31,7 @@ class SynchDisk;
 
 class Map;
 class Semaphore;
-class ProcessTable;
+class PTable;
 class STable;
 
 class Kernel
