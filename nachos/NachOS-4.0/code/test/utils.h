@@ -28,7 +28,9 @@ int abs(int x) { return (x > 0 ? x : -x); }
 
 char* int_to_cstring(int num) {
     char *str;
-    int i = 0, sign = 0;
+    int i;
+    int sign;
+    i = 0, sign = 0;
 
     if (num < 0) {
         sign = 1;
@@ -49,7 +51,8 @@ char* int_to_cstring(int num) {
     str[i] = '\0';
 
     /* reverse string */
-    int j = 0;
+    int j;
+    j = 0;
     while (j < i/2) {
         char temp = str[j];
         str[j] = str[i-j-1];
