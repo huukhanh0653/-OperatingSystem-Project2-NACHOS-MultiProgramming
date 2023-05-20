@@ -3,7 +3,7 @@
 
 PTable::PTable()
 {
-    totalProcesses = size;
+    totalProcesses = MAX_PROCESS;
     reception = new Bitmap(totalProcesses);
     semaphore = new Semaphore("PTable_bmsem", 1);
 
