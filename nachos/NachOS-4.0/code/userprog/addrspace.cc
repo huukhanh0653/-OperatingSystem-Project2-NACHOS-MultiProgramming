@@ -76,7 +76,12 @@ AddrSpace::AddrSpace()
 
 AddrSpace::~AddrSpace()
 {
-    if (pageTable!=NULL)
+    int i;
+    for (i = 0; i < numPages; i++)
+    {
+        kernel->physPageBitMap->Clear(pageTable[i].physicalPage);
+    }
+    if (pageTable != NULL)
         delete pageTable;
 }
 
@@ -94,134 +99,88 @@ bool AddrSpace::Load(char *fileName)
 {
     OpenFile *executable = kernel->fileSystem->Open(fileName);
     NoffHeader noffH;
-    unsigned int size;
+    unsigned int i, size, j, offset;
+    unsigned int numCodePage, numDataPage;
+    int lastCodePageSize, lastDataPageSize, firstDataPageSize,
+        tempDataSize;
 
     if (executable == NULL)
     {
-        cerr << "Unable to open file " << fileName << "\n";
-        return FALSE;
+        DEBUG(dbgFile, "\n Error opening file.");
+        return;
     }
 
-    // READ NOFF HEADER
-    /*
-     Read the executable file's header to get nessessary information
-     (architecture, code segment and data segment)
-    * Make a convertion if file's architecture is different from this system
-    -> SwapHeader() !(convert from small number to big number)
-    Noted by Huu Khanh
-    */
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) &&
         (WordToHost(noffH.noffMagic) == NOFFMAGIC))
         SwapHeader(&noffH);
     ASSERT(noffH.noffMagic == NOFFMAGIC);
-
-#ifdef RDATA
-    // how big is address space?
-    size = noffH.code.size + noffH.readonlyData.size + noffH.initData.size +
-           noffH.uninitData.size + UserStackSize;
-    // we need to increase the size
-    // to leave room for the stack
-#else
-    // how big is address space?
-    size = noffH.code.size + noffH.initData.size + noffH.uninitData.size + UserStackSize; // we need to increase the size
-                                                                                          // to leave room for the stack
-#endif
-    // -> Determine the number of virtual pages required
-    /* //-> Tinh so trang can cap phat cho chuong trinh
-    -> so trang se duoc lam tron len
-    -> (Vi du: 1 chuong trinh co kich thuoc tuong duong 4.15 trang thi se can cap phat 5 trang)
-    Noted: by Huu Khanh
-    */
-    this->numPages = divRoundUp(size, PageSize);
-    size = this->numPages * PageSize; //* Address space size
-
-    ASSERT(this->numPages <= NumPhysPages); // check we're not trying
-                                            // to run anything too big --
-                                            // at least until we have
-                                            // virtual memory
-
-    DEBUG(dbgAddr, "Initializing address space: " << this->numPages << ", " << size);
-
-    // Allocate physical frames
-
     kernel->addrLock->P();
+    // how big is address space?
+    size = noffH.code.size + noffH.initData.size + noffH.uninitData.size +
+           UserStackSize; // we need to increase the size
+                          // to leave room for the stack
+    numPages = divRoundUp(size, PageSize);
+    size = numPages * PageSize;
 
-    // In case of memorial shortage
-    if (this->numPages > kernel->physPageBitMap->NumClear())
+    ASSERT(numPages <= NumPhysPages); // check we're not trying
+                                      // to run anything too big --
+                                      // at least until we have
+                                      // virtual memory
+
+    // Check the available memory enough to load new process
+    // debug
+    if (numPages > kernel->physPageBitMap->NumClear())
     {
-        cerr << "Not enough physical memory!\n";
-        this->numPages = 0;
+        DEBUG(dbgAddr, "Not enough free space");
+        numPages = 0;
         delete executable;
         kernel->addrLock->V();
-        return FALSE;
+        return;
+    }
+    DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
+    // first, set up the translation
+    pageTable = new TranslationEntry[numPages];
+
+    for (i = 0; i < numPages; i++)
+    {
+        pageTable[i].valid = TRUE;
+        pageTable[i].use = FALSE;
+        pageTable[i].dirty = FALSE;
+        pageTable[i].readOnly = FALSE;
+        pageTable[i].virtualPage = i;
+        pageTable[i].physicalPage = kernel->physPageBitMap->FindAndSet();
+        // if the code segment was entirely on
+        // a separate page, we could set its
+        // pages to be read-only
+        // delete these pages from memory
+        bzero(&(kernel->machine
+                    ->mainMemory[pageTable[i].physicalPage * PageSize]),
+              PageSize);
+        DEBUG(dbgAddr, "phyPage " << pageTable[i].physicalPage);
     }
 
-    // Allocating frames: Find and get the free frames in physicalPage
-    this->pageTable = new TranslationEntry[numPages];
-    for (int i = 0; i < numPages; i++)
+    if (noffH.code.size > 0)
     {
-        this->pageTable[i].virtualPage = i;
-        //* Find free frames and set it as being used
-        int freePosition = kernel->physPageBitMap->FindAndSet();
-        this->pageTable[i].physicalPage = freePosition;
-        DEBUG(
-            dbgAddr,
-            "Assigned virtual page " << this->pageTable[i].virtualPage << " to frame " << this->pageTable[i].physicalPage);
-        ASSERT(freePosition != -1);
-
-        this->pageTable[i].valid = TRUE;
-        this->pageTable[i].use = FALSE;
-        this->pageTable[i].dirty = FALSE;
-        this->pageTable[i].readOnly = FALSE;
-
-        // Zero out these frames -> clear memory to use.
-        bzero(
-            kernel->machine->mainMemory + this->pageTable[i].physicalPage * PageSize,
-            PageSize);
+        for (i = 0; i < numPages; i++)
+            executable->ReadAt(
+                &(kernel->machine->mainMemory[noffH.code.virtualAddr]) +
+                    (pageTable[i].physicalPage * PageSize),
+                PageSize, noffH.code.inFileAddr + (i * PageSize));
     }
 
-    //? Khoi tao mot buffer voi kich thuoc bang tong kich thuoc cac segment cua file thuc thi
-    int actualSize = noffH.code.size + noffH.initData.size + noffH.uninitData.size;
-    char *buffer = new char[actualSize];
-    for (int i = 0; i < actualSize; ++i)
+    if (noffH.initData.size > 0)
     {
-        buffer[i] = NULL;
-    }
-
-    int numSegments = 3;
-    Segment *segment[] = {&noffH.code, &noffH.initData, &noffH.uninitData};
-    for (int i = 0; i < numSegments; ++i)
-    {
-        // The virtual address of the segment in the NOFF file is the same as
-        // the virtual address of the starting position of the segment in the
-        // virtual address space
-        int vaddr = segment[i]->virtualAddr;
-        int size = segment[i]->size;
-        if (size != 0)
-        {
-            executable->ReadAt(buffer + vaddr, segment[i]->size, segment[i]->inFileAddr);
-        }
-    }
-
-    int pages = divRoundUp(actualSize, PageSize);
-    int lastPage = actualSize % PageSize;
-    if (lastPage == 0)
-    {
-        lastPage = PageSize;
-    }
-    for (int i = 0; i < pages; ++i)
-    {
-        memcpy(
-            kernel->machine->mainMemory + pageTable[i].physicalPage * PageSize,
-            buffer + i * PageSize,
-            (i == pages - 1) ? lastPage : PageSize);
+        for (i = 0; i < numPages; i++)
+            executable->ReadAt(
+                &(kernel->machine->mainMemory[noffH.initData.virtualAddr]) +
+                    (pageTable[i].physicalPage * PageSize),
+                PageSize, noffH.initData.inFileAddr + (i * PageSize));
     }
 
     kernel->addrLock->V();
-
-    delete executable; // close file
-    return TRUE;       // success
+    delete executable;
+    return TRUE;
 }
 
 //----------------------------------------------------------------------
