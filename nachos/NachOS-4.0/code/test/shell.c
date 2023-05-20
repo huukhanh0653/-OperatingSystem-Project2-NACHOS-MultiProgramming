@@ -14,17 +14,11 @@ main()
 
     while( 1 )
     {
-	Write(prompt, 2, output);
+	Write("Nhap ten chuong trinh: ", 24, output);
 
-	i = 0;
+	i = 10;
 	
-	do {
-	
-	    Read(&buffer[i], 1, input); 
-
-	} while( buffer[i++] != '\n' );
-
-	buffer[--i] = '\0';
+	Read(buffer, 32, input);
 
 	if( i > 0 ) {
 		newProc = Exec(buffer);
@@ -32,4 +26,3 @@ main()
 	}
     }
 }
-
