@@ -54,18 +54,15 @@ SynchConsoleInput::GetChar()
 }
 
 int SynchConsoleInput::GetString(char *buffer, int size) {
-    char getchar;
     for (int i = 0; i < size; ++i) {
-        getchar = GetChar();
-        if (getchar == EOF || getchar == '\n') {
+        buffer[i] = GetChar();
+        if (buffer[i] == EOF) {
+            buffer[i] = 0;
             return -2;
         }
-        else if (i==size) return 0;
-        else buffer[i] = getchar;
     }
     return size;
 }
-
 //----------------------------------------------------------------------
 // SynchConsoleInput::CallBack
 //      Interrupt handler called when keystroke is hit; wake up

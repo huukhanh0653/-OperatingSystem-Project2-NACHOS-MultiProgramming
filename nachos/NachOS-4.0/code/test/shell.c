@@ -14,7 +14,7 @@ main()
 
     while( 1 )
     {
-	Write("Nhap ten chuong trinh: ", 24, output);
+	Write(prompt, 2, output);
 
 	i = 10;
 	

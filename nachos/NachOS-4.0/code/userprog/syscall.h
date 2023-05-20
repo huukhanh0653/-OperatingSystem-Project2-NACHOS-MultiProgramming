@@ -194,11 +194,14 @@ OpenFileId SocketTCP();
 int Connect(int socketid, char *ip, int port); 
 
 void Send(int socketid, char* buffer, int len);
+
 void Receive(int socketid, char* buffer, int len);
 
+int CreateSemaphore(char* name, int semval);
 
+int Wait(char* name);
 
-
+int Signal(char* name);
 
 #endif /* IN_ASM */
 

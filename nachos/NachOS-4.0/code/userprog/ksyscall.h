@@ -55,7 +55,6 @@ int SysRead(char *buffer, int charCount, OpenFileId fileId)
   return table.getFile(fileId)->ReadFile(buffer, charCount);
   // return -1;
 }
-
 int SysWrite(char *buffer, int charCount, OpenFileId fileId)
 {
   if (fileId == _ConsoleOutput)
@@ -66,7 +65,7 @@ int SysWrite(char *buffer, int charCount, OpenFileId fileId)
 
   if (fileId / 100 != READONLY_MODE)
   {
-    int result = (table.getFile(fileId)!=NULL?table.getFile(fileId)->WriteFile(buffer, charCount):-1);
+    int result = (table.getFile(fileId) != NULL ? table.getFile(fileId)->WriteFile(buffer, charCount) : -1);
     if (result < 0)
       cout << "Cannot Write\n";
     return result;
