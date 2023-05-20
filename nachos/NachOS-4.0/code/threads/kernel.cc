@@ -109,7 +109,7 @@ Kernel::Initialize()
     physPageBitMap = new Bitmap(NumPhysPages); // -> The number of physical pages: 128
     addrLock = new Semaphore("addrLock", 1); // -> ???
     pTable = new PTable(MAX_PROCESS);
-    semaphoreTable = new STable();
+    sTable = new STable();
 
 #ifdef FILESYS_STUB
     fileSystem = new FileSystem();
@@ -144,7 +144,7 @@ Kernel::~Kernel()
     //-> For NACHOS_P2
     delete addrLock;
     delete physPageBitMap;
-    delete semaphoreTable;
+    delete sTable;
     
     Exit(0);
 }
