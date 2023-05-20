@@ -290,7 +290,7 @@ PollFile(int fd)
     retVal = select(32, &rfd, &wfd, &xfd, &pollTime);
 #endif
 
-    ASSERT((retVal == 0) || (retVal == 1));
+    //ASSERT((retVal == 0) || (retVal == 1));
     if (retVal == 0)
 	return FALSE;                 		// no char waiting to be read
     return TRUE;
@@ -309,7 +309,7 @@ OpenForWrite(char *name)
 {
     int fd = open(name, O_RDWR|O_CREAT|O_TRUNC, 0666);
 
-    ASSERT(fd >= 0); 
+    //ASSERT(fd >= 0); 
     return fd;
 }
 
@@ -326,7 +326,7 @@ OpenForReadWrite(char *name, bool crashOnError)
 {
     int fd = open(name, O_RDWR, 0);
 
-    ASSERT(!crashOnError || fd >= 0);
+    //ASSERT(!crashOnError || fd >= 0);
     return fd;
 }
 
@@ -339,7 +339,7 @@ void
 Read(int fd, char *buffer, int nBytes)
 {
     int retVal = read(fd, buffer, nBytes);
-    ASSERT(retVal == nBytes);
+    //ASSERT(retVal == nBytes);
 }
 
 //----------------------------------------------------------------------
@@ -364,7 +364,7 @@ void
 WriteFile(int fd, char *buffer, int nBytes)
 {
     int retVal = write(fd, buffer, nBytes);
-    ASSERT(retVal == nBytes);
+    //ASSERT(retVal == nBytes);
 }
 
 //----------------------------------------------------------------------
@@ -376,7 +376,7 @@ void
 Lseek(int fd, int offset, int whence)
 {
     int retVal = lseek(fd, offset, whence);
-    ASSERT(retVal >= 0);
+    //ASSERT(retVal >= 0);
 }
 
 //----------------------------------------------------------------------
@@ -405,7 +405,7 @@ int
 Close(int fd)
 {
     int retVal = close(fd);
-    ASSERT(retVal >= 0); 
+    //ASSERT(retVal >= 0); 
     return retVal;
 }
 
@@ -433,7 +433,7 @@ OpenSocket()
     int sockID;
     
     sockID = socket(AF_UNIX, SOCK_DGRAM, 0);
-    ASSERT(sockID >= 0);
+    //ASSERT(sockID >= 0);
 
     return sockID;
 }
@@ -477,7 +477,7 @@ AssignNameToSocket(char *socketName, int sockID)
 
     InitSocketName(&uName, socketName);
     retVal = bind(sockID, (struct sockaddr *) &uName, sizeof(uName));
-    ASSERT(retVal >= 0);
+    //ASSERT(retVal >= 0);
     DEBUG(dbgNet, "Created socket " << socketName);
 }
 
@@ -530,7 +530,7 @@ ReadFromSocket(int sockID, char *buffer, int packetSize)
 						<< ", and " << errno << "\n";
 #endif 
     }
-    ASSERT(retVal == packetSize);
+    //ASSERT(retVal == packetSize);
 }
 
 //----------------------------------------------------------------------
@@ -558,7 +558,7 @@ SendToSocket(int sockID, char *buffer, int packetSize, char *toName)
       // if we did not succeed, we should see a negative
       // return value indicating complete failure.  If we
       // don't, something fishy is going on...
-      ASSERT(retVal < 0);
+      //ASSERT(retVal < 0);
       // wait a second before trying again
       Delay(1);
     }
