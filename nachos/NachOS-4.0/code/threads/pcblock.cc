@@ -10,26 +10,27 @@
 static void StartProcess(void *args)
 {
     int id;
-    id = *((int*)args);
+    id = *((int *)args);
     // Get the fileName of this process id
-    char* fileName = strcpy(fileName,kernel->pTable->GetFileName(id));
+    char *fileName = strcpy(fileName, kernel->pTable->GetFileName(id));
 
-    AddrSpace* addrspace;
+    AddrSpace *addrspace;
     addrspace->Load(fileName);
 
-    if (addrspace == NULL) {
+    if (addrspace == NULL)
+    {
         cerr << "PCB::Exec() : Can't create AddSpace.\n";
         return;
     }
 
-    addrspace->Execute();   // kernel->currentThread->space = space;
-                            // space->InitRegisters();	// set the initial register values
-                            // space->RestoreState();	// load page table register
-                            // kernel->machine->Run();	// jump to the user progam
-    
-    ASSERT(FALSE);  // machine->Run never returns;
-                    // the address space exits
-                    // by doing the syscall "exit"
+    addrspace->Execute(); // kernel->currentThread->space = space;
+                          // space->InitRegisters();	// set the initial register values
+                          // space->RestoreState();	// load page table register
+                          // kernel->machine->Run();	// jump to the user progam
+
+    ASSERT(FALSE); // machine->Run never returns;
+                   // the address space exits
+                   // by doing the syscall "exit"
 }
 
 PCB::PCB()
@@ -52,7 +53,8 @@ PCB::PCB(const char *fileName, Thread *thread) : PCB()
     this->thread = thread;
 }
 
-PCB::PCB(int id) {
+PCB::PCB(int id)
+{
     this->pid = kernel->currentThread->pid;
     this->joinsemaphore = new Semaphore("joinsem", 0);
     this->exitsemaphore = new Semaphore("exitsem", 0);
@@ -61,15 +63,19 @@ PCB::PCB(int id) {
 
 PCB::~PCB()
 {
-    delete this->file;
+    if (this->file)
+        delete this->file;
     if (this->thread)
     {
         this->thread->Finish();
         delete this->thread;
     }
-    delete this->joinsemaphore;
-    delete this->exitsemaphore;
-    delete this->mutex;
+    if (this->joinsemaphore)
+        delete this->joinsemaphore;
+    if (this->exitsemaphore)
+        delete this->exitsemaphore;
+    if (this->mutex)
+        delete this->mutex;
 }
 
 int PCB::GetID()

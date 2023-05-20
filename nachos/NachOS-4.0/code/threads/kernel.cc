@@ -106,9 +106,10 @@ Kernel::Initialize()
     synchConsoleOut = new SynchConsoleOutput(consoleOut); // output to stdout
     synchDisk = new SynchDisk();    //
 
+    // -> For NACHOS_P2
     physPageBitMap = new Bitmap(NumPhysPages); // -> The number of physical pages: 128
     addrLock = new Semaphore("addrLock", 1); // -> ???
-    pTable = new PTable(MAX_PROCESS);
+    pTable = new PTable();
     sTable = new STable();
 
 #ifdef FILESYS_STUB

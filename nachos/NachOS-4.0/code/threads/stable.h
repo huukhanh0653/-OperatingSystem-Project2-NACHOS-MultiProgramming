@@ -14,7 +14,7 @@ class STable
 {
 private:
     // Manager empty slot
-    Map *map;
+    Bitmap *map;
     // Lock manger (10 MySemaphore)
     Semaphore *table[MAX_SEMAPHORE];
 

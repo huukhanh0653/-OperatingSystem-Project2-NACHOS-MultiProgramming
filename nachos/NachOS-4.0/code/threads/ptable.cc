@@ -33,8 +33,10 @@ PTable::PTable(int size)
 
 PTable::~PTable()
 {
-    delete reception;
-    delete semaphore;
+    if (reception)
+        delete reception;
+    if (semaphore)
+        delete semaphore;
     for (int i = 0; i < totalProcesses; ++i)
     {
         if (!blocks[i])
@@ -71,7 +73,8 @@ void PTable::Remove(int pid)
     {
         --totalProcesses;
         reception->Clear(pid);
-        delete blocks[pid];
+        if (blocks[pid])
+            delete blocks[pid];
         blocks[pid] = NULL;
     }
 }

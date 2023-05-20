@@ -1,9 +1,8 @@
 #include "stable.h"
-#include "map_semaphore.h"
 
 STable::STable()
 {
-    this->map = new Map(MAX_SEMAPHORE);
+    this->map = new Bitmap(MAX_SEMAPHORE);
 
     for (int i = 0; i < MAX_SEMAPHORE; i++)
     {
@@ -34,11 +33,10 @@ int STable::Create(char *name, int value)
     DEBUG(dbgSynch, "STable::Create MySemaphore " << name << " - " << value);
     for (int i = 0; i < MAX_SEMAPHORE; i++)
     {
-        if (!this->map->isFree(i))
+        if (this->map->Test(i))
         {
-            if (strcmp(name, table[i]->getName()) == 0)
+            if (strcmp(name, this->table[i]->getName()) == 0)
             {
-                DEBUG(dbgSynch, "STable: Find existed MySemaphore");
                 return -1;
             }
         }
@@ -59,23 +57,21 @@ int STable::Create(char *name, int value)
 
 int STable::Wait(char *name)
 {
-    DEBUG(dbgSynch, "STable::Wait(\"" << name << "\")");
     for (int i = 0; i < MAX_SEMAPHORE; i++)
     {
-        // Check does slot[i] load MySemaphore
-        if (!this->map->isFree(i))
+        // Check if a semaphore has been created in slot i
+        if (this->map->Test(i))
         {
-            // if yes then compare nam with name of MySemaphore in table
-            if (strcmp(name, table[i]->getName()) == 0)
+            // If a semaphore exists, compare its name with the input name
+            if (strcmp(name, this->table[i]->getName()) == 0)
             {
-                // If exist then make MySemaphore down()
-                // DEBUG(dbgSynch, "STable: Find MySemaphore in table[" << i << "]");
-                table[i]->P();
+                // If the semaphore exists, call its wait() method
+                this->table[i]->P();
                 return 0;
             }
         }
     }
-    DEBUG(dbgSynch, "Not exists MySemaphore in wait");
+    cerr <<"Semaphore not found.\n";
     return -1;
 }
 
@@ -85,7 +81,7 @@ int STable::Signal(char *name)
     for (int i = 0; i < MAX_SEMAPHORE; i++)
     {
         // Check does slot[i] load MySemaphore
-        if (!this->map->isFree(i))
+        if (!this->map->Test(i))
         {
             // if yes then compare nam with name of MySemaphore in table
             if (strcmp(name, table[i]->getName()) == 0)
@@ -103,5 +99,5 @@ int STable::Signal(char *name)
 
 int STable::FindFreeSlot()
 {
-    return (int)this->map->findFree();
+    return (int)this->map->FindAndSet();
 }
