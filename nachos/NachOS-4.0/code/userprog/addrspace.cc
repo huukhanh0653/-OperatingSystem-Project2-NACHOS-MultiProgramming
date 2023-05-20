@@ -76,7 +76,8 @@ AddrSpace::AddrSpace()
 
 AddrSpace::~AddrSpace()
 {
-    delete pageTable;
+    if (pageTable!=NULL)
+        delete pageTable;
 }
 
 //----------------------------------------------------------------------
