@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-#define MAX_PROCESSES 10
+#define MAX_PROCESS 10
 
 class Semaphore;
 class PCB;
@@ -18,7 +18,7 @@ class PTable {
 
 private:
     // The array of system-wide PCBs to manage
-    PCB *blocks[MAX_PROCESSES];
+    PCB *blocks[MAX_PROCESS];
     // Number of alive processes in the system
     int totalProcesses;
     // Manages free slots in the PCBs table
@@ -28,7 +28,7 @@ private:
     
 public:
     // Initializes process table with `size` entries
-    PTable(int size = MAX_PROCESSES);
+    PTable(int size = MAX_PROCESS);
 
     ~PTable();
 

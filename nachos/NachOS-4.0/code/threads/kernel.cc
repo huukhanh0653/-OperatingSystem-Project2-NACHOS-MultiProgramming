@@ -21,7 +21,6 @@
 #include "pcblock.h"
 #include "ptable.h"
 #include "stable.h"
-#include "map_semaphore.h"
 
 //----------------------------------------------------------------------
 // Kernel::Kernel
