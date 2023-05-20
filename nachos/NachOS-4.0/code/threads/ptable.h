@@ -28,7 +28,8 @@ private:
     
 public:
     // Initializes process table with `size` entries
-    PTable(int size = MAX_PROCESS);
+    PTable(int size);
+    PTable();
 
     ~PTable();
 

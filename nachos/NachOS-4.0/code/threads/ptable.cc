@@ -1,13 +1,28 @@
 #include "ptable.h"
 #include "synch.h"
 
+PTable::PTable()
+{
+    totalProcesses = size;
+    reception = new Bitmap(totalProcesses);
+    semaphore = new Semaphore("PTable_bmsem", 1);
+
+    for (int i = 0; i < MAX_PROCESS; ++i)
+        blocks[i] = NULL;
+
+    // -> Initialize first process
+    // -> (start up process, run automatically by Nachos)
+    blocks[0] = new PCB(0);
+    blocks[0]->parentID = -1;
+}
+
 PTable::PTable(int size)
 {
     totalProcesses = size;
     reception = new Bitmap(totalProcesses);
     semaphore = new Semaphore("PTable_bmsem", 1);
 
-    for (int i = 0; i < MAX_PROCESSES; ++i)
+    for (int i = 0; i < totalProcesses; ++i)
         blocks[i] = NULL;
 
     // -> Initialize first process
@@ -42,7 +57,7 @@ int PTable::GetFreeSlot()
 
 bool PTable::IsExist(int pid)
 {
-    if (pid < 0 || pid >= MAX_PROCESSES)
+    if (pid < 0 || pid >= MAX_PROCESS)
     {
         return FALSE;
     }

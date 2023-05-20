@@ -9,7 +9,7 @@
 
 class Semaphore;
 
-//* MySemaphore TABLE
+//* Semaphore TABLE
 class STable
 {
 private:

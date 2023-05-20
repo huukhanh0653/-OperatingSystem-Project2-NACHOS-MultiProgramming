@@ -22,6 +22,7 @@
 #include "bitmap.h"
 #include "stable.h"
 #include "ptable.h"
+
 class PostOfficeInput;
 class PostOfficeOutput;
 class SynchConsoleInput;
