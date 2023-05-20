@@ -15,6 +15,8 @@
 
 #include "copyright.h"
 #include "filesys.h"
+#include "machine.h"
+#include "translate.h"
 
 #ifndef CALLNOFF
 #define CALLNOFF

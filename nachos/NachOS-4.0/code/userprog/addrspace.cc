@@ -20,6 +20,7 @@
 #include "addrspace.h"
 #include "machine.h"
 #include "noff.h"
+#include "synch.h"
 
 //----------------------------------------------------------------------
 // SwapHeader
@@ -146,7 +147,7 @@ bool AddrSpace::Load(char *fileName)
     kernel->addrLock->P();
 
     // In case of memorial shortage
-    if (this->numPages > kernel->physPageMap->numFree())
+    if (this->numPages > kernel->physPageBitMap->NumClear())
     {
         cerr << "Not enough physical memory!\n";
         this->numPages = 0;
@@ -161,7 +162,7 @@ bool AddrSpace::Load(char *fileName)
     {
         this->pageTable[i].virtualPage = i;
         //* Find free frames and set it as being used
-        int freePosition = kernel->physPageMap->findFree();
+        int freePosition = kernel->physPageBitMap->FindAndSet();
         this->pageTable[i].physicalPage = freePosition;
         DEBUG(
             dbgAddr,

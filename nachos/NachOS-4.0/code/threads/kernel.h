@@ -18,6 +18,7 @@
 #include "alarm.h"
 #include "filesys.h"
 #include "machine.h"
+#include "synch.h"
 
 #include "bitmap.h"
 #include "stable.h"
