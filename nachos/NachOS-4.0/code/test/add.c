@@ -13,11 +13,11 @@
 int main()
 {
  
-  int result;
-  char* string;
-  result = Add(42, 23);
+  // int result;
+  // char* string;
+  // result = Add(42, 23);
 
-  tostring(string,result);
+  // tostring(string,result);
   //Write(string,3,CONSOLE_OUTPUT);
   Halt();
   /* not reached */
