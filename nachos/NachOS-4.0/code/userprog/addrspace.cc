@@ -107,7 +107,7 @@ bool AddrSpace::Load(char *fileName)
     if (executable == NULL)
     {
         DEBUG(dbgFile, "\n Error opening file.");
-        return;
+        return false;
     }
 
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
@@ -136,7 +136,7 @@ bool AddrSpace::Load(char *fileName)
         numPages = 0;
         delete executable;
         kernel->addrLock->V();
-        return;
+        return false;
     }
     DEBUG(dbgAddr, "Initializing address space: " << numPages << ", " << size);
     // first, set up the translation
@@ -180,7 +180,7 @@ bool AddrSpace::Load(char *fileName)
 
     kernel->addrLock->V();
     delete executable;
-    return TRUE;
+    return true;
 }
 
 //----------------------------------------------------------------------
