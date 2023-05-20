@@ -17,7 +17,7 @@ int main()
   char* string;
   result = Add(42, 23);
 
-  strCopy(string,int_to_cstring(result));
+  tostring(string,result);
   Write(string,3,CONSOLE_OUTPUT);
   
   /* not reached */

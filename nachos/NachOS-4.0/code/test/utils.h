@@ -26,43 +26,24 @@ int len(char *str)
 
 int abs(int x) { return (x > 0 ? x : -x); }
 
-char* int_to_cstring(int num) {
-    char *str;
-    int i;
-    int sign;
-    i = 0, sign = 0;
-
-    if (num < 0) {
-        sign = 1;
-        num = -num;
+void tostring(char str[], int num)
+{
+    int i, rem, len = 0, n;
+ 
+    n = num;
+    while (n != 0)
+    {
+        len++;
+        n /= 10;
     }
-
-    /* allocate memory for the cstring */
-    str = (char*) malloc(20);
-
-    do {
-        str[i++] = num % 10 + '0';
-        num /= 10;
-    } while(num > 0);
-
-    if (sign)
-        str[i++] = '-';
-
-    str[i] = '\0';
-
-    /* reverse string */
-    int j;
-    j = 0;
-    while (j < i/2) {
-        char temp = str[j];
-        str[j] = str[i-j-1];
-        str[i-j-1] = temp;
-        j++;
+    for (i = 0; i < len; i++)
+    {
+        rem = num % 10;
+        num = num / 10;
+        str[len - (i + 1)] = rem + '0';
     }
-
-    return str;
+    str[len] = '\0';
 }
-
 
 char *_concat(char s1[], char s2[])
 {
@@ -76,7 +57,7 @@ char *_concat(char s1[], char s2[])
     return s1;
 }
 
-void clrStr(char *buffer,int len)
+void clrStr(char *buffer, int len)
 {
     int i;
     for (i = 0; i < len; i++)
