@@ -12,7 +12,18 @@
 
 int main()
 {
-  // int result, id, SocketID1, SocketID2, id1, id2;
+ 
+  int result;
+  char* string;
+  result = Add(42, 23);
+
+  strCopy(string,int_to_cstring(result));
+  Write(string,3,CONSOLE_OUTPUT);
+  
+  /* not reached */
+}
+
+ // int result, id, SocketID1, SocketID2, id1, id2;
   // char buffer[256];
   // char *Content;
 
@@ -87,5 +98,3 @@ int main()
 
 
   
-  /* not reached */
-}
