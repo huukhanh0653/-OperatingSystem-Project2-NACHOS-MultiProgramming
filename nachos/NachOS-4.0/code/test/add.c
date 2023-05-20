@@ -18,8 +18,8 @@ int main()
   result = Add(42, 23);
 
   tostring(string,result);
-  Write(string,3,CONSOLE_OUTPUT);
-  
+  //Write(string,3,CONSOLE_OUTPUT);
+  Halt();
   /* not reached */
 }
 
