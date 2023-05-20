@@ -15,7 +15,7 @@ static void StartProcess(void *args)
     char* fileName = strcpy(fileName,kernel->pTable->GetFileName(id));
 
     AddrSpace* addrspace;
-    addrspace = new AddrSpace(fileName);
+    addrspace->Load(fileName);
 
     if (addrspace == NULL) {
         cerr << "PCB::Exec() : Can't create AddSpace.\n";
