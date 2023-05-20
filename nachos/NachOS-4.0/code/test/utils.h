@@ -26,34 +26,39 @@ int len(char *str)
 
 int abs(int x) { return (x > 0 ? x : -x); }
 
-// char* str(int num)
-// {
-//     int i = 0;
-//     // Handle negative integers
-//     if (num < 0) {
-//         str[i++] = '-';
-//         num = -num;
-//     }
-//     // Convert individual digits into a string
-//     if (num == 0) {
-//         str[i++] = '0';
-//     } else {
-//         while (num != 0) {
-//             int rem = num % 10;
-//             str[i++] = (rem > 9) ? (rem-10)+'a' : rem+'0';
-//             num /= 10;
-//         }
-//     }
-//     str[i] = '\0'; // Add null character to the end of the string
-//     // Reverse the string
-//     int len = i;
-//     for (i = 0; i < len / 2; i++) {
-//         char temp = str[i];
-//         str[i] = str[len-i-1];
-//         str[len-i-1] = temp;
-//     }
-//     return str;
-// }
+char* int_to_cstring(int num) {
+    char *str;
+    int i = 0, sign = 0;
+
+    if (num < 0) {
+        sign = 1;
+        num = -num;
+    }
+
+    /* allocate memory for the cstring */
+    str = (char*) malloc(20);
+
+    do {
+        str[i++] = num % 10 + '0';
+        num /= 10;
+    } while(num > 0);
+
+    if (sign)
+        str[i++] = '-';
+
+    str[i] = '\0';
+
+    /* reverse string */
+    int j = 0;
+    while (j < i/2) {
+        char temp = str[j];
+        str[j] = str[i-j-1];
+        str[i-j-1] = temp;
+        j++;
+    }
+
+    return str;
+}
 
 
 char *_concat(char s1[], char s2[])

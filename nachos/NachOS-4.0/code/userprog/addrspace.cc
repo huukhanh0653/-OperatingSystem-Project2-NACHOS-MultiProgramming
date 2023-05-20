@@ -99,10 +99,7 @@ bool AddrSpace::Load(char *fileName)
 {
     OpenFile *executable = kernel->fileSystem->Open(fileName);
     NoffHeader noffH;
-    unsigned int i, size, j, offset;
-    unsigned int numCodePage, numDataPage;
-    int lastCodePageSize, lastDataPageSize, firstDataPageSize,
-        tempDataSize;
+    unsigned int i, size, j;
 
     if (executable == NULL)
     {
@@ -111,11 +108,14 @@ bool AddrSpace::Load(char *fileName)
     }
 
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+
     if ((noffH.noffMagic != NOFFMAGIC) &&
         (WordToHost(noffH.noffMagic) == NOFFMAGIC))
         SwapHeader(&noffH);
     ASSERT(noffH.noffMagic == NOFFMAGIC);
+
     kernel->addrLock->P();
+
     // how big is address space?
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size +
            UserStackSize; // we need to increase the size
@@ -154,9 +154,11 @@ bool AddrSpace::Load(char *fileName)
         // a separate page, we could set its
         // pages to be read-only
         // delete these pages from memory
+        //-> to fill a void* with 0 
         bzero(&(kernel->machine
                     ->mainMemory[pageTable[i].physicalPage * PageSize]),
               PageSize);
+
         DEBUG(dbgAddr, "phyPage " << pageTable[i].physicalPage);
     }
 

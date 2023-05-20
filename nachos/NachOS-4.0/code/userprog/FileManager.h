@@ -39,15 +39,15 @@ typedef int OpenFileId;
     File se luu FilePointer, file descriptor, type(doc, doc-ghi, socket)
     File ID la 1 so nguyen duong
     duoc tich hop boi gia tri type va file descriptor voi cong thuc:
-    ! ID = type*100 + FilePointer->ID()
-    ! Cac gia tri type duoc dinh nghia o cac dong: 21,22,23 cua file nay
+    -> ID = type*100 + FilePointer->ID()
+    -> Cac gia tri type duoc dinh nghia o cac dong: 21,22,23 cua file nay
 
     => Voi cong thuc nay, ham se tra ve 1 so co 3 chu so voi chu so hang tram la type file
     va 2 chu so con lai la file id duoc tao ra boi Nachos
-    !ID se giup phan biet giua file thong thuong va socket-> Giup hoan thanh phan advanced
+    ->ID se giup phan biet giua file thong thuong va socket-> Giup hoan thanh phan advanced
 */
 
-//! Ultility
+//-> Ultility
 
 int Min(int a, int b)
 {
@@ -59,7 +59,7 @@ int Max(int a, int b)
     return a > b ? a : b;
 }
 
-//!-----------------------
+//-> -----------------------
 
 struct Socket
 {
@@ -111,7 +111,7 @@ public:
     }
 
     int Type() { return this->type; }
-    OpenFileId ID() { return this->id; } //!   MODE*100+FD = ID
+    OpenFileId ID() { return this->id; } //->   MODE*100+FD = ID
     int getSocketID() { return this->_Socket.socketID; }
     char *Name() { return this->_File.name; }
     int Offset() { return this->_File.currentOffset; }
@@ -125,7 +125,7 @@ public:
             this->_File.name = name;
             this->type = type;
             this->id = (type * 100) + fid;
-            this->_File.currentOffset = 0; // Filesystem Object sets Offset = 0 as default
+            this->_File.currentOffset = 0; //-> Filesystem Object sets Offset = 0 as default
             return id;
         }
         else
