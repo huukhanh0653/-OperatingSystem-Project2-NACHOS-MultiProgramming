@@ -28,5 +28,5 @@ int main()
     } else
         Write("Create file failed\n\n",30,1);
 
-    Halt();
+    //Halt();
 }

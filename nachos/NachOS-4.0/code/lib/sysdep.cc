@@ -27,12 +27,16 @@
 #include "debug.h"
 #include "sysdep.h"
 #include <stdlib.h>
+
+#ifdef LINUX
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/file.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <cerrno>
+
+#endif
 
 #ifdef SOLARIS
 // KMS
