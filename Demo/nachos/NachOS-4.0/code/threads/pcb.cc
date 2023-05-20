@@ -19,7 +19,6 @@ static void StartProcess(void *args)
     ASSERTNOTREACHED();
 }
 
-
 PCB::PCB()
 {
     _pid = -1;

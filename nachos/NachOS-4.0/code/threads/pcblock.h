@@ -24,25 +24,31 @@ class PCB
 {
 
 private:
-    int pid;
-    int exitCode;
-    // Name of the executable file to load and run
-    char *file;
-    // The thread object to be run
-    Thread *thread;
-    // Number of joined processes
-    int numwait; // Note: tell us how many process are waiting
-    // Semaphore to use for controlling join process
+    //* Semaphore to use for controlling join process
     Semaphore *joinsemaphore;
-    // Semaphore to use for controlling exit process
+    //* Semaphore to use for controlling exit process
     Semaphore *exitsemaphore;
+    //* exclusive access semaphore
     Semaphore *mutex;
+    //* Process ID
+    int pid; 
+
+    //* Name of the executable file to load and run
+    char *file;
+    //* The thread object to be run
+    Thread *thread; 
+
+    //* Number of joined processes
+    int numwait; // ->  Note: tell us how many process are waiting
+                 
+    //* the returned value of the process
+    int exitCode; 
 
 public:
     int parentID;
-
     // Constructor
     PCB();
+    PCB(int id);
     // Destructor
     ~PCB();
 
@@ -68,20 +74,19 @@ public:
     // Returns the current Thread object of this process. Use with care.
     const Thread *GetThread();
 
-    // Returns the number of processes this process is waiting for.
-    int GetNumWait();
+    int GetNumWait(); //* Returns the number of processes this process is waiting for.
 
     // Blocks until JoinRelease() is called. This method is called by the
     // parent process that wants to join into this process (i.e. waiting for
     // this process to finish).
-    void JoinWait();
+    void JoinWait(); //-> The parent process wait for the child process finishes
 
     // Releases the parent that are waiting for this process.
-    void JoinRelease();
-
+    void JoinRelease(); //-> The child process notice the parent process
+    //-> The child process finishes
     void ExitWait();
-
-    void ExitRelease();
+    // The parent process accept to exit the child process
+    void ExitRelease(); 
 
     void IncNumWait();
 

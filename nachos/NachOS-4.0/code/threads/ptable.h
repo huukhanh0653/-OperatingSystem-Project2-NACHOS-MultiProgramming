@@ -5,10 +5,8 @@
 #include "pcblock.h"
 #include "synch.h"
 #include "thread.h"
-#include "map_semaphore.h"
 
 #include <stdio.h>
-
 
 #define MAX_PROCESSES 10
 
@@ -16,7 +14,7 @@ class Semaphore;
 class PCB;
 
 // Process Table
-class ProcessTable {
+class PTable {
 
 private:
     // The array of system-wide PCBs to manage
@@ -24,32 +22,31 @@ private:
     // Number of alive processes in the system
     int totalProcesses;
     // Manages free slots in the PCBs table
-    Map *reception;
+    Bitmap *reception;
     // Semaphore
     Semaphore *semaphore;
     
 public:
     // Initializes process table with `size` entries
-    ProcessTable(int size = MAX_PROCESSES);
+    PTable(int size = MAX_PROCESSES);
 
-    ~ProcessTable();
+    ~PTable();
 
     // Allocates the start up process (first executed by Nachos)
-    void InitializeFirstProcess(const char* fileName, Thread* thread);
+    //void InitializeFirstProcess(const char* fileName, Thread* thread);
 
-    int GetCurrentThreadId(Thread* currentThread);
+    int GetCurrentThreadId();
 
     // Sets up PCB and schedules the program stored in `fileName`.
     // Returns the process id on success, -1 otherwise
-    int UpdateExecuting(char *fileName);
+    int ExecuteUpdate(char *fileName);
 
     // Updates the process table when the current thread join into the thread
     // `id`
-    int UpdateJoining(int id);
+    int JoinUpdate(int id);
 
     // Updates the process table when the current thread exit with exit code
-    // `ec`
-    int UpdateExiting(int ec);
+    int ExitUpdate(int exitcode);
 
     // Return an index to a free slot in the table, returns -1
     // if the table is full
@@ -58,11 +55,10 @@ public:
     // Returns TRUE if pid exists
     bool IsExist(int pid);
 
-    // Removes a PCB
+    // Removes a block that has process id = 'pid'
     void Remove(int pid);
 
-    // Print the current process table
-    void Print();
+    const char* GetFileName(int pid);
 };
 
-#endif // ProcessTable_H
+#endif // PTable_H

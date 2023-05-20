@@ -107,10 +107,10 @@ Kernel::Initialize()
     synchConsoleOut = new SynchConsoleOutput(consoleOut); // output to stdout
     synchDisk = new SynchDisk();    //
 
-    physPageMap = new Map(NumPhysPages);
-    addrLock = new Semaphore("addrLock", 1);
-    processTab = new ProcessTable;
-    semaphoreTab = new STable;
+    physPageBitMap = new Bitmap(NumPhysPages); // -> The number of physical pages: 128
+    addrLock = new Semaphore("addrLock", 1); // -> ???
+    pTable = new PTable(MAX_PROCESS);
+    semaphoreTable = new STable();
 
 #ifdef FILESYS_STUB
     fileSystem = new FileSystem();
@@ -144,8 +144,8 @@ Kernel::~Kernel()
 
     //-> For NACHOS_P2
     delete addrLock;
-    delete physPageMap;
-    delete semaphoreTab;
+    delete physPageBitMap;
+    delete semaphoreTable;
     
     Exit(0);
 }

@@ -1,170 +1,178 @@
 #include "ptable.h"
+#include "synch.h"
 
-ProcessTable::ProcessTable(int size)
+PTable::PTable(int size)
 {
     totalProcesses = size;
-    reception = new Map(totalProcesses);
-    semaphore = new Semaphore("ProcessTable_bmsem", 1);
+    reception = new Bitmap(totalProcesses);
+    semaphore = new Semaphore("PTable_bmsem", 1);
 
-    for (int i = 0; i < MAX_PROCESSES; ++i) {
+    for (int i = 0; i < MAX_PROCESSES; ++i)
         blocks[i] = NULL;
-    }
+
+    // -> Initialize first process
+    // -> (start up process, run automatically by Nachos)
+    blocks[0] = new PCB(0);
+    blocks[0]->parentID = -1;
 }
 
-ProcessTable::~ProcessTable()
+PTable::~PTable()
 {
     delete reception;
     delete semaphore;
-    for (int i = 0; i < totalProcesses; ++i) {
-        delete blocks[i];
+    for (int i = 0; i < totalProcesses; ++i)
+    {
+        if (!blocks[i])
+            delete blocks[i];
     }
 }
 
-void ProcessTable::InitializeFirstProcess(const char *fileName, Thread* thread)
+int PTable::GetCurrentThreadId()
 {
-    blocks[0] = new PCB(fileName, thread);
-    totalProcesses++;
-    reception->mark(0);
-}
-
-int ProcessTable::GetCurrentThreadId(Thread* currentThread)
-{
-    for (int i = 0; i < MAX_PROCESSES; ++i) {
-        if (blocks[i] != 0) {
-            if (blocks[i]->GetThread() == currentThread) {
-                return blocks[i]->GetID();
-            }
-        }
-    }
+    Thread *current = kernel->currentThread;
+    if (current != NULL)
+        return current->pid;
     return -1;
 }
 
-int ProcessTable::GetFreeSlot()
+int PTable::GetFreeSlot()
 {
-    return reception->findFree();
+    return reception->FindAndSet();
 }
 
-bool ProcessTable::IsExist(int pid)
+bool PTable::IsExist(int pid)
 {
-    if (pid < 0 || pid >= MAX_PROCESSES) {
+    if (pid < 0 || pid >= MAX_PROCESSES)
+    {
         return FALSE;
     }
 
     return blocks[pid] != NULL;
 }
 
-void ProcessTable::Remove(int pid)
+void PTable::Remove(int pid)
 {
-    if (IsExist(pid)) {
+    if (IsExist(pid))
+    {
         --totalProcesses;
-        reception->clear(pid);
+        reception->Clear(pid);
         delete blocks[pid];
         blocks[pid] = NULL;
     }
 }
 
-int ProcessTable::UpdateExecuting(char *fileName)
+int PTable::ExecuteUpdate(char *fileName)
 {
     semaphore->P();
-    DEBUG(dbgThread, "ProcessTable::ExecUpdate(\"" << fileName << "\")");
+    DEBUG(dbgThread, "PTable::ExecUpdate(\"" << fileName << "\")");
 
-    // Prevent self-execution
-    DEBUG(dbgThread, "ProcessTable: Checking " << fileName << " for self-execution...");
-    int currentThreadId = GetCurrentThreadId(kernel->currentThread);
-    if (strcmp(blocks[currentThreadId]->GetExecutableFileName(), fileName) == 0) {
-        cerr << "ProcessTable: %s cannot execute itself.\n", fileName;
+    // Avoid self-execution
+    DEBUG(dbgThread, "PTable: Checking " << fileName << " for self-execution...");
+    int currentThreadId = GetCurrentThreadId();
+    if (strcmp(blocks[currentThreadId]->GetExecutableFileName(), fileName) == 0)
+    {
+        cerr << "PTable: %s cannot execute itself.\n", fileName;
         semaphore->V();
         return -1;
     }
 
     // Allocate a new PCB
-    DEBUG(dbgThread, "ProcessTable: Looking for free slot in process table...");
+    DEBUG(dbgThread, "PTable: Look for free slot in process table...");
     int slot = GetFreeSlot();
-    if (slot == -1) {
-        cerr << "ProcessTable: Maximum number of processes reached.\n";
+    if (slot == -1)
+    {
+        cerr << "PTable: Maximum number of processes reached.\n";
         semaphore->V();
         return -1;
     }
 
     // PID = slot number
-    blocks[slot] = new PCB();
-    blocks[slot]->parentID = currentThreadId;
-    
+    this->blocks[slot] = new PCB();
+    this->blocks[slot]->parentID = currentThreadId;
+
     // Schedule the program for execution
-    DEBUG(dbgThread, "ProcessTable: Scheduling program for execution...");
-    int result = blocks[slot]->Exec(fileName, slot);
-    totalProcesses++;
-    semaphore->V();
-    return result;
+    DEBUG(dbgThread, "PTable: Schedul program for execution...");
+
+    this->totalProcesses++;
+    this->semaphore->V();
+
+    // Return the PID of PCB->Exec if success, else return -1
+    return this->blocks[slot]->Exec(fileName, slot);
 }
 
-int ProcessTable::UpdateJoining(int id)
+int PTable::JoinUpdate(int id)
 {
-    int currentThreadId = GetCurrentThreadId(kernel->currentThread);
-    if (!IsExist(id)) {
-        fprintf(
-            stderr,
-            "ProcessTable: Join into an invalid process "
-            "(there is no process with id: %d)\n",
-            id
-        );
+    int currentThreadId = GetCurrentThreadId();
+    if (!IsExist(id))
+    {
+        cerr << "PTable: Join into an invalid process\n";
         return -1;
     }
 
-    if (id == currentThreadId) {
-        fprintf(
-            stderr,
-            "ProcessTable: Process with id %d cannot join to itself\n",
-            currentThreadId
-        );
+    if (id == currentThreadId)
+    {
+        cerr << "PTable: Process with id " << currentThreadId << " cannot join to itself\n";
         return -2;
-    } else if (blocks[id]->parentID != currentThreadId) {
-        fprintf(
-            stderr,
-            "ProcessTable: Can only join parent to child process "
-            "(process with id %d is not parent of process with id %d)\n",
-            currentThreadId,
-            id
-        );
+    }
+
+    if (blocks[id]->parentID != currentThreadId)
+    {
+        cerr << "PTable: Can only join parent to child process \n";
         return -3;
     }
 
+    // Increment numwait and call JoinWait() to wait for the child process to complete.
     blocks[currentThreadId]->IncNumWait();
     blocks[id]->JoinWait();
 
-    blocks[currentThreadId]->DecNumWait();
+    // After the child process is complete, the process is released.
     blocks[id]->ExitRelease();
+
     return blocks[id]->GetExitCode();
 }
 
-int ProcessTable::UpdateExiting(int ec)
+int PTable::ExitUpdate(int exitcode)
 {
-    int currentThreadId = GetCurrentThreadId(kernel->currentThread);
-    if (currentThreadId == 0) {
+    int currentThreadId = GetCurrentThreadId();
+    if (currentThreadId == 0)
+    {
+        kernel->currentThread->FreeSpace();
         kernel->interrupt->Halt();
-    } else {
-        blocks[currentThreadId]->SetExitCode(ec);
-        blocks[currentThreadId]->JoinRelease();
-        blocks[currentThreadId]->ExitWait();
-        Remove(currentThreadId);
+        return 0;
     }
+    if (!IsExist(currentThreadId))
+    {
+        DEBUG(dbgSys, "Process " << currentThreadId << " is not exist.");
+        return -1;
+    }
+
+    blocks[currentThreadId]->SetExitCode(exitcode);
+    blocks[currentThreadId]->JoinRelease();
+    blocks[currentThreadId]->ExitWait();
+    Remove(currentThreadId);
 }
 
-void ProcessTable::Print()
+const char *PTable::GetFileName(int id)
 {
-    printf("\n\nTime: %d\n", kernel->stats->totalTicks);
-    printf("Current process table:\n");
-    printf("ID\tParent\tExecutable File\n");
-    int currentThreadId = GetCurrentThreadId(kernel->currentThread);
-    for (int i = 0; i < MAX_PROCESSES; ++i) {
-        if (blocks[i]) {
-            printf(
-                "%d\t%d\t%s%s\n",
-                blocks[i]->GetID(),
-                blocks[i]->parentID,
-                blocks[i]->GetExecutableFileName(),
-                i == currentThreadId ? " (current thread) " : ""
-            );  
-        }
-    }
+    return this->blocks[id]->GetExecutableFileName();
 }
+
+// void PTable::Print()
+// {
+//     printf("\n\nTime: %d\n", kernel->stats->totalTicks);
+//     printf("Current process table:\n");
+//     printf("ID\tParent\tExecutable File\n");
+//     int currentThreadId = GetCurrentThreadId(kernel->currentThread);
+//     for (int i = 0; i < MAX_PROCESSES; ++i)
+//     {
+//         if (blocks[i])
+//         {
+//             printf(
+//                 "%d\t%d\t%s%s\n",
+//                 blocks[i]->GetID(),
+//                 blocks[i]->parentID,
+//                 blocks[i]->GetExecutableFileName(),
+//                 i == currentThreadId ? " (current thread) " : "");
+//         }
+//     }
+// }

@@ -19,10 +19,9 @@
 #include "filesys.h"
 #include "machine.h"
 
-#include "ptable.h"
+#include "bitmap.h"
 #include "stable.h"
-#include "map_semaphore.h"
-
+#include "ptable.h"
 class PostOfficeInput;
 class PostOfficeOutput;
 class SynchConsoleInput;
@@ -69,10 +68,10 @@ public:
 
   int hostName; // machine identifier
 
-  Map *physPageMap;
-  Semaphore *addrLock;
-  ProcessTable *processTab;
-  STable *semaphoreTab;
+  Semaphore *addrLock; // -> ???
+  Bitmap *physPageBitMap;
+  PTable *pTable;
+  STable *semaphoreTable;
 
 private:
   bool randomSlice;   // enable pseudo-random time slicing
