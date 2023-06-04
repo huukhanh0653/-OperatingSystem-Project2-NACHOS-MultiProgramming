@@ -1,1 +1,1 @@
-Demo folder was cloned from : https://github.com/mdnam2410/hcmus-os-nachos
+Demo folder: https://github.com/mdnam2410/hcmus-os-nachos
